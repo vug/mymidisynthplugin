@@ -11,7 +11,6 @@ My first goal is to make a simple synth that has following components, where I w
 - Maybe a pitch-bend input
 - Maybe an LFO or ADSR for filter too.
 
-
 # Active questions
 * How to know which modules to include?
 
@@ -73,5 +72,9 @@ My first goal is to make a simple synth that has following components, where I w
   * Save the Projucer project, and open it in the IDE again "Save an open in IDE".
   * Looks like, module files are not copied to Visual Studio project but their path is known by VS.
   * Build project again, and I must good to go.
+* Meaning of ADSR stages
+  * [Envelope \(music\) \- Wikipedia](https://en.wikipedia.org/wiki/Envelope_(music))
+* C++ Structs
+  * [4\.7 — Structs \| Learn C\+\+](https://www.learncpp.com/cpp-tutorial/47-structs/)
 
 
