@@ -57,5 +57,20 @@ My first goal is to make a simple synth that has following components, where I w
 * JUCE Source Control Practices
   * [Having problems with source control \- Audio Plugins \- JUCE](https://forum.juce.com/t/having-problems-with-source-control/19225/3)
   * [JUCE project setup process \| CredlandAudio](http://blog.credland.net/2016/05/juce-project-setup-process.html)
+* Adding files to JUCE Project
+  * This has to be done trough Projucer. For example, to add a new cpp class file, don't do it using Visual Studio UI. Open "File Explorer" in Projucer. Click on "(+)", then "Add New CPP File..." or if you already had used Visual Studio or something else, "Add Existing Files..."
+  * This way, new files will be part of the "JUCE Project" and any IDE export will have them.
+* Upgrading JUCE
+  * I wan't to use the ADSR class that is mentioned in the documentation. Apparently, it was introduced in version 5.4.2, whereas I had version 5.4.1
+  * To upgrade the JUCE library, open Projucer. I think it does an "check upgrades" at the beginning. It asks to download newer version. 
+  * (I first attempted to download it on the existing folder, however that failed.)
+  * Download it to JUCE-5.4.2 folder
+  * Open the Projucer in the newer version. Open existing project.
+  * File > Global Paths
+  * Set "Path to JUCE" and "JUCE Modules" to `C:\Users\veliu\JUCE-5.4.2` paths. 
+  * Now when I click on module names in "Modules" section, I see that their version is 5.4.2.
+  * Save the Projucer project, and open it in the IDE again "Save an open in IDE".
+  * Looks like, module files are not copied to Visual Studio project but their path is known by VS.
+  * Build project again, and I must good to go.
 
 
