@@ -100,14 +100,14 @@ void MyMidiSynthPlugInAudioProcessor::prepareToPlay (double sampleRate, int samp
 	currentSampleRate = sampleRate;
 	masterVolume.setValue(1.0);
 	masterVolume.reset(sampleRate, 0.01);
-	volumeADSR.setSampleRate(sampleRate);
+	volArEnv.setSampleRate(sampleRate);
 	ADSR::Parameters p;
 	p.attack = 0.5f;
 	p.decay = 0.0f;
 	p.sustain = 1.0f;
 	p.release = 0.75f;
-	volumeADSR.setParameters(p);
-	volumeADSR.reset();
+	volArEnv.setParameters(p);
+	volArEnv.reset();
 
 	osc1 = Oscillator(currentSampleRate);
 	osc2 = Oscillator(currentSampleRate);
@@ -161,16 +161,16 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		noteFrequency = MidiMessage::getMidiNoteInHertz(getMostRecentNote());
 		osc1.frequency = noteFrequency;
 		osc2.frequency = noteFrequency;
-		volumeADSR.noteOn();
+		volArEnv.noteOn();  // switches to "attack" State at every block, which prevents triggering of decay and sustain phases, hence AR-Envelope.
 	}
 	else
 	{
-		volumeADSR.noteOff();
+		volArEnv.noteOff();
 	}
 
 	for (int i = 0; i < buffer.getNumSamples(); i++) {
 		float vol = masterVolume.getNextValue();
-		float a = volumeADSR.getNextSample();
+		float a = volArEnv.getNextSample();
 		double x1 = osc1.oscillate();
 		double x2 = osc2.oscillate();
 		double m = oscVolumesMix;

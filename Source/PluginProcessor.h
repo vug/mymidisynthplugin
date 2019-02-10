@@ -60,7 +60,7 @@ public:
 	Oscillator osc1;
 	Oscillator osc2;
 	double oscVolumesMix = 0.0;
-	ADSR volumeADSR;
+	ADSR volArEnv;  // AR (Attack/Release) only envelope
 
 private:
     //==============================================================================
