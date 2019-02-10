@@ -10,7 +10,9 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 	osc1TypeSelect.addItem("Saw Tooth", (int)oscillatorTypes::sawtooth);
 	osc1TypeSelect.addItem("Square", (int)oscillatorTypes::square);
 
-	osc1TypeSelect.onChange = [this] { processor.osc1.type = (oscillatorTypes)osc1TypeSelect.getSelectedId(); };
+	osc1TypeSelect.onChange = [this] { 
+		processor.osc1.type = (oscillatorTypes)osc1TypeSelect.getSelectedId(); 
+	};
 	osc1TypeSelect.setSelectedId((int)oscillatorTypes::sinusoidal);
 
 	addAndMakeVisible(osc2TypeSelect);
