@@ -160,7 +160,8 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		float a = amplitude.getNextValue();
 		double x1 = osc1.oscillate();
 		double x2 = osc2.oscillate();
-		float currentSample = a * (x1 + x2) * 0.5;
+		double m = oscVolumesMix;
+		float currentSample = a * ((1.0 - m) * x1 + m * x2);
 
 		for (auto channel = buffer.getNumChannels() - 1; channel >= 0; --channel)  // left, right channel agnostic
 		{

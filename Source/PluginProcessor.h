@@ -59,6 +59,7 @@ public:
 
 	Oscillator osc1;
 	Oscillator osc2;
+	double oscVolumesMix = 0.0;
 
 private:
     //==============================================================================
@@ -66,13 +67,11 @@ private:
 
 	double currentSampleRate = 0.0;
 	double noteFrequency;
-
 	LinearSmoothedValue<double> amplitude;
 	int lastNoteNumber = -1;
 	long timeInSamples = 0l;
+
 	std::unordered_map<int, long> pressedNotes;
 
 	int getMostRecentNote();
 };
-
-
