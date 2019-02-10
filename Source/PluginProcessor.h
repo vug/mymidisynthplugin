@@ -68,7 +68,7 @@ private:
 
 	double currentSampleRate = 0.0;
 	double noteFrequency;
-	LinearSmoothedValue<double> amplitude;
+	LinearSmoothedValue<double> masterVolume;  // overall Synth volume
 	int lastNoteNumber = -1;
 	long timeInSamples = 0l;
 
