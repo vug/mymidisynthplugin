@@ -47,6 +47,16 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 		processor.osc2.freqMultiplier = getFreqShiftMultiplier();
 	};
 
+	addAndMakeVisible(oscMixSlider);
+	oscMixSlider.setSliderStyle(Slider::LinearHorizontal);
+	oscMixSlider.setRange(0.0, 1.0, 0.1);
+	oscMixSlider.setValue(0.0);
+	oscMixSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	oscMixSlider.setPopupDisplayEnabled(true, true, this, 2000);
+	oscMixSlider.onValueChange = [this] {
+		processor.oscVolumesMix = oscMixSlider.getValue();
+	};
+
     setSize (400, 300);
 }
 
@@ -72,7 +82,8 @@ void MyMidiSynthPlugInAudioProcessorEditor::paint (Graphics& g)
 void MyMidiSynthPlugInAudioProcessorEditor::resized()
 {
 	osc1TypeSelect.setBounds(10, 10, 100, 20);
-	osc2TypeSelect.setBounds(120, 10, 100, 20);
-	shiftSemitonesKnob.setBounds(240, 10, 50, 50);
-	shiftCentsKnob.setBounds(310, 10, 50, 50);
+	oscMixSlider.setBounds(120, 10, 100, 20);
+	osc2TypeSelect.setBounds(240, 10, 100, 20);
+	shiftSemitonesKnob.setBounds(240, 40, 50, 50);
+	shiftCentsKnob.setBounds(310, 40, 50, 50);
 }

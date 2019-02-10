@@ -34,6 +34,7 @@ private:
 	ComboBox osc2TypeSelect;
 	Slider shiftSemitonesKnob;
 	Slider shiftCentsKnob;
+	Slider oscMixSlider;
 
 	double getFreqShiftMultiplier();
 
