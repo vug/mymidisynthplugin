@@ -32,6 +32,7 @@ private:
     MyMidiSynthPlugInAudioProcessor& processor;
 	ComboBox osc1TypeSelect;
 	ComboBox osc2TypeSelect;
+	Slider shiftSemitonesKnob;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MyMidiSynthPlugInAudioProcessorEditor)
 };

@@ -21,6 +21,14 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 	osc2TypeSelect.onChange = [this] { processor.osc2.type = (oscillatorTypes)osc2TypeSelect.getSelectedId(); };
 	osc2TypeSelect.setSelectedId((int)oscillatorTypes::sinusoidal);
 
+	addAndMakeVisible(shiftSemitonesKnob);
+	shiftSemitonesKnob.setSliderStyle(Slider::Rotary);
+	shiftSemitonesKnob.setRotaryParameters(1.5 * float_Pi, 2.5 * float_Pi, false);
+	shiftSemitonesKnob.setRange(-12, 12, 1.0);
+	shiftSemitonesKnob.setTextValueSuffix(" semitones");
+	shiftSemitonesKnob.setValue(0);
+	shiftSemitonesKnob.setTextBoxStyle(Slider::NoTextBox, false, 60, 20);
+	shiftSemitonesKnob.setPopupDisplayEnabled(true, true, this, 2000);
     setSize (400, 300);
 }
 
@@ -43,4 +51,5 @@ void MyMidiSynthPlugInAudioProcessorEditor::resized()
 {
 	osc1TypeSelect.setBounds(10, 10, 100, 20);
 	osc2TypeSelect.setBounds(120, 10, 100, 20);
+	shiftSemitonesKnob.setBounds(240, 10, 50, 50);
 }
