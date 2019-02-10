@@ -99,6 +99,14 @@ void MyMidiSynthPlugInAudioProcessor::prepareToPlay (double sampleRate, int samp
 {
 	currentSampleRate = sampleRate;
 	amplitude.reset(sampleRate, 0.01);
+	volumeADSR.setSampleRate(sampleRate);
+	ADSR::Parameters p;
+	p.attack = 0.5f;
+	p.decay = 0.25f;
+	p.sustain = 0.5f;
+	p.release = 0.75f;
+	volumeADSR.setParameters(p);
+	volumeADSR.reset();
 
 	osc1 = Oscillator(currentSampleRate);
 	osc2 = Oscillator(currentSampleRate);
@@ -147,21 +155,27 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		}
 	}
 
-	amplitude.setValue(0.0);
 	if (!pressedNotes.empty())  // TODO: frequency changes are snapped at block beginnings. Note right. They should happen the moment the note came in? Well... Note were already pressed actually...
 	{
 		noteFrequency = MidiMessage::getMidiNoteInHertz(getMostRecentNote());
 		osc1.frequency = noteFrequency;
 		osc2.frequency = noteFrequency;
 		amplitude.setValue(1.0);
+		volumeADSR.noteOn();
+	}
+	else
+	{
+		amplitude.setValue(0.0);
+		volumeADSR.noteOff();
 	}
 
 	for (int i = 0; i < buffer.getNumSamples(); i++) {
 		float a = amplitude.getNextValue();
+		float b = volumeADSR.getNextSample();
 		double x1 = osc1.oscillate();
 		double x2 = osc2.oscillate();
 		double m = oscVolumesMix;
-		float currentSample = a * ((1.0 - m) * x1 + m * x2);
+		float currentSample = b * ((1.0 - m) * x1 + m * x2);
 
 		for (auto channel = buffer.getNumChannels() - 1; channel >= 0; --channel)  // left, right channel agnostic
 		{

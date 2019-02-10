@@ -60,6 +60,7 @@ public:
 	Oscillator osc1;
 	Oscillator osc2;
 	double oscVolumesMix = 0.0;
+	ADSR volumeADSR;
 
 private:
     //==============================================================================
