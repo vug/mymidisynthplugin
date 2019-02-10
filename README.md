@@ -60,6 +60,7 @@ My first goal is to make a simple synth that has following components, where I w
 * Adding files to JUCE Project
   * This has to be done trough Projucer. For example, to add a new cpp class file, don't do it using Visual Studio UI. Open "File Explorer" in Projucer. Click on "(+)", then "Add New CPP File..." or if you already had used Visual Studio or something else, "Add Existing Files..."
   * This way, new files will be part of the "JUCE Project" and any IDE export will have them.
+  * See: [JUCE: Tutorial: Projucer Part 2: Manage your Projucer projects](https://docs.juce.com/master/tutorial_manage_projucer_project.html)
 * Upgrading JUCE
   * I wan't to use the ADSR class that is mentioned in the documentation. Apparently, it was introduced in version 5.4.2, whereas I had version 5.4.1
   * To upgrade the JUCE library, open Projucer. I think it does an "check upgrades" at the beginning. It asks to download newer version. 

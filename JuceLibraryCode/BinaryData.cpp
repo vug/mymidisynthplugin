@@ -68,6 +68,23 @@ static const unsigned char temp_binary_data_0[] =
 "* JUCE Source Control Practices\r\n"
 "  * [Having problems with source control \\- Audio Plugins \\- JUCE](https://forum.juce.com/t/having-problems-with-source-control/19225/3)\r\n"
 "  * [JUCE project setup process \\| CredlandAudio](http://blog.credland.net/2016/05/juce-project-setup-process.html)\r\n"
+"* Adding files to JUCE Project\r\n"
+"  * This has to be done trough Projucer. For example, to add a new cpp class file, don't do it using Visual Studio UI. Open \"File Explorer\" in Projucer. Click on \"(+)\", then \"Add New CPP File...\" or if you already had used Visual Studio or some"
+"thing else, \"Add Existing Files...\"\r\n"
+"  * This way, new files will be part of the \"JUCE Project\" and any IDE export will have them.\r\n"
+"  * See: [JUCE: Tutorial: Projucer Part 2: Manage your Projucer projects](https://docs.juce.com/master/tutorial_manage_projucer_project.html)\r\n"
+"* Upgrading JUCE\r\n"
+"  * I wan't to use the ADSR class that is mentioned in the documentation. Apparently, it was introduced in version 5.4.2, whereas I had version 5.4.1\r\n"
+"  * To upgrade the JUCE library, open Projucer. I think it does an \"check upgrades\" at the beginning. It asks to download newer version. \r\n"
+"  * (I first attempted to download it on the existing folder, however that failed.)\r\n"
+"  * Download it to JUCE-5.4.2 folder\r\n"
+"  * Open the Projucer in the newer version. Open existing project.\r\n"
+"  * File > Global Paths\r\n"
+"  * Set \"Path to JUCE\" and \"JUCE Modules\" to `C:\\Users\\veliu\\JUCE-5.4.2` paths. \r\n"
+"  * Now when I click on module names in \"Modules\" section, I see that their version is 5.4.2.\r\n"
+"  * Save the Projucer project, and open it in the IDE again \"Save an open in IDE\".\r\n"
+"  * Looks like, module files are not copied to Visual Studio project but their path is known by VS.\r\n"
+"  * Build project again, and I must good to go.\r\n"
 "\r\n"
 "\r\n";
 
@@ -84,7 +101,7 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
 
     switch (hash)
     {
-        case 0x64791dc8:  numBytes = 4285; return README_md;
+        case 0x64791dc8:  numBytes = 5771; return README_md;
         default: break;
     }
 
