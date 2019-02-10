@@ -29,6 +29,10 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 	shiftSemitonesKnob.setValue(0);
 	shiftSemitonesKnob.setTextBoxStyle(Slider::NoTextBox, false, 60, 20);
 	shiftSemitonesKnob.setPopupDisplayEnabled(true, true, this, 2000);
+	shiftSemitonesKnob.onValueChange = [this] { 
+		processor.osc2.freqMultiplier = pow(2.0, shiftSemitonesKnob.getValue() / 12.0); 
+	};
+
     setSize (400, 300);
 }
 
