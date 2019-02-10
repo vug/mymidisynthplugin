@@ -102,10 +102,10 @@ void MyMidiSynthPlugInAudioProcessor::prepareToPlay (double sampleRate, int samp
 	masterVolume.reset(sampleRate, 0.01);
 	volArEnv.setSampleRate(sampleRate);
 	ADSR::Parameters p;
-	p.attack = 0.5f;
+	p.attack = 0.01f;
 	p.decay = 0.0f;
 	p.sustain = 1.0f;
-	p.release = 0.75f;
+	p.release = 0.01f;
 	volArEnv.setParameters(p);
 	volArEnv.reset();
 
