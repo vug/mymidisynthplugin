@@ -33,6 +33,9 @@ private:
 	ComboBox osc1TypeSelect;
 	ComboBox osc2TypeSelect;
 	Slider shiftSemitonesKnob;
+	Slider shiftCentsKnob;
+
+	double getFreqShiftMultiplier();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MyMidiSynthPlugInAudioProcessorEditor)
 };
