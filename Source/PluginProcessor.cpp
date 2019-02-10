@@ -102,7 +102,6 @@ void MyMidiSynthPlugInAudioProcessor::prepareToPlay (double sampleRate, int samp
 
 	osc1 = Oscillator(currentSampleRate);
 	osc2 = Oscillator(currentSampleRate);
-	osc2.freqMultiplier = 1.01;
 }
 
 void MyMidiSynthPlugInAudioProcessor::releaseResources()
