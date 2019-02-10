@@ -32,7 +32,9 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 	shiftSemitonesKnob.setTextBoxStyle(Slider::NoTextBox, false, 60, 20);
 	shiftSemitonesKnob.setPopupDisplayEnabled(true, true, this, 2000);
 	shiftSemitonesKnob.onValueChange = [this] { 
-		processor.osc2.freqMultiplier = pow(2.0, shiftSemitonesKnob.getValue() / 12.0); 
+		processor.osc2.freqMultiplier = getFreqShiftMultiplier();
+	};
+
 	addAndMakeVisible(shiftCentsKnob);
 	shiftCentsKnob.setSliderStyle(Slider::Rotary);
 	shiftCentsKnob.setRotaryParameters(1.5 * float_Pi, 2.5 * float_Pi, false);
@@ -41,9 +43,15 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 	shiftCentsKnob.setValue(0);
 	shiftCentsKnob.setTextBoxStyle(Slider::NoTextBox, false, 60, 20);
 	shiftCentsKnob.setPopupDisplayEnabled(true, true, this, 2000);
+	shiftCentsKnob.onValueChange = [this] {
+		processor.osc2.freqMultiplier = getFreqShiftMultiplier();
 	};
 
     setSize (400, 300);
+}
+
+double MyMidiSynthPlugInAudioProcessorEditor::getFreqShiftMultiplier() {
+	return pow(2.0, shiftSemitonesKnob.getValue() / 12.0 + shiftCentsKnob.getValue() / 1200.0);
 }
 
 MyMidiSynthPlugInAudioProcessorEditor::~MyMidiSynthPlugInAudioProcessorEditor()
