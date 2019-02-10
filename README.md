@@ -47,6 +47,8 @@ My first goal is to make a simple synth that has following components, where I w
 * Monophonic synth key press handling
   * [dictionary \- C\+\+ Help finding the max value in a map \- Stack Overflow](https://stackoverflow.com/questions/9370945/c-help-finding-the-max-value-in-a-map/9371137#9371137)
   * [unordered\_map \- C\+\+ Reference](http://www.cplusplus.com/reference/unordered_map/unordered_map/)
+* UI for osc type selection
+  * JUCE: Tutorial: The ComboBox class https://docs.juce.com/master/tutorial_combo_box.html
 * Parameter (such as volume) change without glitches
   * [JUCE: LinearSmoothedValue< FloatType > Class Template Reference](https://docs.juce.com/master/classLinearSmoothedValue.html#a6cc025f0d2de6ac18dc15368a31e893c)
 * Misc
