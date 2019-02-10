@@ -35,6 +35,8 @@ private:
 	Slider shiftSemitonesKnob;
 	Slider shiftCentsKnob;
 	Slider oscMixSlider;
+	Slider envAttackSlider;
+	Slider envReleaseSlider;
 
 	double getFreqShiftMultiplier();
 

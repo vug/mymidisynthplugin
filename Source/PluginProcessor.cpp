@@ -98,7 +98,16 @@ void MyMidiSynthPlugInAudioProcessor::changeProgramName (int index, const String
 void MyMidiSynthPlugInAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
 	currentSampleRate = sampleRate;
-	amplitude.reset(sampleRate, 0.01);
+	masterVolume.setValue(1.0);
+	masterVolume.reset(sampleRate, 0.01);
+	volArEnv.setSampleRate(sampleRate);
+	ADSR::Parameters p;
+	p.attack = 0.01f;
+	p.decay = 0.0f;
+	p.sustain = 1.0f;
+	p.release = 0.01f;
+	volArEnv.setParameters(p);
+	volArEnv.reset();
 
 	osc1 = Oscillator(currentSampleRate);
 	osc2 = Oscillator(currentSampleRate);
@@ -147,21 +156,25 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		}
 	}
 
-	amplitude.setValue(0.0);
 	if (!pressedNotes.empty())  // TODO: frequency changes are snapped at block beginnings. Note right. They should happen the moment the note came in? Well... Note were already pressed actually...
 	{
 		noteFrequency = MidiMessage::getMidiNoteInHertz(getMostRecentNote());
 		osc1.frequency = noteFrequency;
 		osc2.frequency = noteFrequency;
-		amplitude.setValue(1.0);
+		volArEnv.noteOn();  // switches to "attack" State at every block, which prevents triggering of decay and sustain phases, hence AR-Envelope.
+	}
+	else
+	{
+		volArEnv.noteOff();
 	}
 
 	for (int i = 0; i < buffer.getNumSamples(); i++) {
-		float a = amplitude.getNextValue();
+		float vol = masterVolume.getNextValue();
+		float a = volArEnv.getNextSample();
 		double x1 = osc1.oscillate();
 		double x2 = osc2.oscillate();
 		double m = oscVolumesMix;
-		float currentSample = a * ((1.0 - m) * x1 + m * x2);
+		float currentSample = vol * a * ((1.0 - m) * x1 + m * x2);
 
 		for (auto channel = buffer.getNumChannels() - 1; channel >= 0; --channel)  // left, right channel agnostic
 		{

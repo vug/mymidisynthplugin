@@ -60,6 +60,7 @@ public:
 	Oscillator osc1;
 	Oscillator osc2;
 	double oscVolumesMix = 0.0;
+	ADSR volArEnv;  // AR (Attack/Release) only envelope
 
 private:
     //==============================================================================
@@ -67,7 +68,7 @@ private:
 
 	double currentSampleRate = 0.0;
 	double noteFrequency;
-	LinearSmoothedValue<double> amplitude;
+	LinearSmoothedValue<double> masterVolume;  // overall Synth volume
 	int lastNoteNumber = -1;
 	long timeInSamples = 0l;
 
