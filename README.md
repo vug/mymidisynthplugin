@@ -1,4 +1,4 @@
-# A side project for learning JUCE
+﻿# A side project for learning JUCE
 
 My first goal is to make a simple synth that has following components, where I wrote each of them myself.
 
@@ -53,9 +53,17 @@ My first goal is to make a simple synth that has following components, where I w
 * Misc
   * [c\+\+ \- Can't use modulus on doubles? \- Stack Overflow](https://stackoverflow.com/questions/9138790/cant-use-modulus-on-doubles)
   * [visual studio \- Default directory where new classes are stored? \- Stack Overflow](https://stackoverflow.com/questions/9700170/default-directory-where-new-classes-are-stored)
+* JUCE Sliders
+  * [JUCE: Slider Class Reference](https://docs.juce.com/master/classSlider.html)
+  * [JUCE: Tutorial: The Slider class](https://docs.juce.com/master/tutorial_slider_values.html)
+  * [Integer Slider \- General JUCE discussion \- JUCE](https://forum.juce.com/t/integer-slider/26884)
+* C++ Math
+  * [pow \- C\+\+ Reference](http://www.cplusplus.com/reference/cmath/pow/)
 * JUCE Source Control Practices
   * [Having problems with source control \- Audio Plugins \- JUCE](https://forum.juce.com/t/having-problems-with-source-control/19225/3)
   * [JUCE project setup process \| CredlandAudio](http://blog.credland.net/2016/05/juce-project-setup-process.html)
+* General Source Control
+  * [Whatʼs a Fast Forward Merge?](https://sandofsky.com/images/fast_forward.pdf)
 * Adding files to JUCE Project
   * This has to be done trough Projucer. For example, to add a new cpp class file, don't do it using Visual Studio UI. Open "File Explorer" in Projucer. Click on "(+)", then "Add New CPP File..." or if you already had used Visual Studio or something else, "Add Existing Files..."
   * This way, new files will be part of the "JUCE Project" and any IDE export will have them.
@@ -72,9 +80,11 @@ My first goal is to make a simple synth that has following components, where I w
   * Save the Projucer project, and open it in the IDE again "Save an open in IDE".
   * Looks like, module files are not copied to Visual Studio project but their path is known by VS.
   * Build project again, and I must good to go.
-* Meaning of ADSR stages
-  * [Envelope \(music\) \- Wikipedia](https://en.wikipedia.org/wiki/Envelope_(music))
+* ADSR
+  * [JUCE: ADSR Class Reference](https://docs.juce.com/develop/classADSR.html)
+  * [JUCE: ADSR::Parameters Struct Reference](https://docs.juce.com/develop/structADSR_1_1Parameters.html)
+  * Meaning of ADSR stages [Envelope \(music\) \- Wikipedia](https://en.wikipedia.org/wiki/Envelope_(music))
 * C++ Structs
-  * [4\.7 � Structs \| Learn C\+\+](https://www.learncpp.com/cpp-tutorial/47-structs/)
+  * [4\.7 — Structs \| Learn C\+\+](https://www.learncpp.com/cpp-tutorial/47-structs/)
 
 
