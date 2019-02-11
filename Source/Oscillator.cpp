@@ -34,8 +34,3 @@ double Oscillator::oscillate()
 	phase += (frequency * freqMultiplier) * MathConstants<double>::twoPi / currentSampleRate;
 	return x;
 }
-
-double Oscillator::func()
-{
-	return 0.0;
-}

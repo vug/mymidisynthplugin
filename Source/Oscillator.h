@@ -15,7 +15,6 @@ public:
 	~Oscillator();
 
 	double oscillate();
-	double func();
 	oscillatorTypes type;
 	double frequency = 220.0;
 	double freqMultiplier = 1.0;
