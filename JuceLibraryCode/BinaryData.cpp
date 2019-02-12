@@ -9,7 +9,7 @@ namespace BinaryData
 
 //================== README.md ==================
 static const unsigned char temp_binary_data_0[] =
-"# A side project for learning JUCE\r\n"
+"\xef\xbb\xbf# A side project for learning JUCE\r\n"
 "\r\n"
 "My first goal is to make a simple synth that has following components, where I wrote each of them myself.\r\n"
 "\r\n"
@@ -21,7 +21,6 @@ static const unsigned char temp_binary_data_0[] =
 "- Maybe a vibrato connected to modulation wheel (I don't have a MIDI controller yet though)\r\n"
 "- Maybe a pitch-bend input\r\n"
 "- Maybe an LFO or ADSR for filter too.\r\n"
-"\r\n"
 "\r\n"
 "# Active questions\r\n"
 "* How to know which modules to include?\r\n"
@@ -65,9 +64,17 @@ static const unsigned char temp_binary_data_0[] =
 "* Misc\r\n"
 "  * [c\\+\\+ \\- Can't use modulus on doubles? \\- Stack Overflow](https://stackoverflow.com/questions/9138790/cant-use-modulus-on-doubles)\r\n"
 "  * [visual studio \\- Default directory where new classes are stored? \\- Stack Overflow](https://stackoverflow.com/questions/9700170/default-directory-where-new-classes-are-stored)\r\n"
+"* JUCE Sliders\r\n"
+"  * [JUCE: Slider Class Reference](https://docs.juce.com/master/classSlider.html)\r\n"
+"  * [JUCE: Tutorial: The Slider class](https://docs.juce.com/master/tutorial_slider_values.html)\r\n"
+"  * [Integer Slider \\- General JUCE discussion \\- JUCE](https://forum.juce.com/t/integer-slider/26884)\r\n"
+"* C++ Math\r\n"
+"  * [pow \\- C\\+\\+ Reference](http://www.cplusplus.com/reference/cmath/pow/)\r\n"
 "* JUCE Source Control Practices\r\n"
 "  * [Having problems with source control \\- Audio Plugins \\- JUCE](https://forum.juce.com/t/having-problems-with-source-control/19225/3)\r\n"
 "  * [JUCE project setup process \\| CredlandAudio](http://blog.credland.net/2016/05/juce-project-setup-process.html)\r\n"
+"* General Source Control\r\n"
+"  * [What\xca\xbcs a Fast Forward Merge?](https://sandofsky.com/images/fast_forward.pdf)\r\n"
 "* Adding files to JUCE Project\r\n"
 "  * This has to be done trough Projucer. For example, to add a new cpp class file, don't do it using Visual Studio UI. Open \"File Explorer\" in Projucer. Click on \"(+)\", then \"Add New CPP File...\" or if you already had used Visual Studio or some"
 "thing else, \"Add Existing Files...\"\r\n"
@@ -85,6 +92,12 @@ static const unsigned char temp_binary_data_0[] =
 "  * Save the Projucer project, and open it in the IDE again \"Save an open in IDE\".\r\n"
 "  * Looks like, module files are not copied to Visual Studio project but their path is known by VS.\r\n"
 "  * Build project again, and I must good to go.\r\n"
+"* ADSR\r\n"
+"  * [JUCE: ADSR Class Reference](https://docs.juce.com/develop/classADSR.html)\r\n"
+"  * [JUCE: ADSR::Parameters Struct Reference](https://docs.juce.com/develop/structADSR_1_1Parameters.html)\r\n"
+"  * Meaning of ADSR stages [Envelope \\(music\\) \\- Wikipedia](https://en.wikipedia.org/wiki/Envelope_(music))\r\n"
+"* C++ Structs\r\n"
+"  * [4\\.7 \xe2\x80\x94 Structs \\| Learn C\\+\\+](https://www.learncpp.com/cpp-tutorial/47-structs/)\r\n"
 "\r\n"
 "\r\n";
 
@@ -101,7 +114,7 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
 
     switch (hash)
     {
-        case 0x64791dc8:  numBytes = 5771; return README_md;
+        case 0x64791dc8:  numBytes = 6683; return README_md;
         default: break;
     }
 
