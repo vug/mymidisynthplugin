@@ -31,6 +31,7 @@ double Oscillator::oscillate()
 		break;
 	}
 
+	double freqMultiplier = pow(2.0, freqShiftSemitones / 12.0 + freqShiftCents / 1200.0);
 	phase += (frequency * freqMultiplier) * MathConstants<double>::twoPi / currentSampleRate;
 	return x;
 }

@@ -17,7 +17,8 @@ public:
 	double oscillate();
 	oscillatorTypes type;
 	double frequency = 220.0;
-	double freqMultiplier = 1.0;
+	int freqShiftSemitones = 0;
+	int freqShiftCents = 0;
 
 private:
 	double phase = 0.0;
