@@ -91,12 +91,6 @@ void MyMidiSynthPlugInAudioProcessor::prepareToPlay (double sampleRate, int samp
 	masterVolume.setValue(1.0);
 	masterVolume.reset(sampleRate, 0.01);
 	volArEnv.setSampleRate(sampleRate);
-	ADSR::Parameters p;
-	p.attack = 0.01f;
-	p.decay = 0.0f;
-	p.sustain = 1.0f;
-	p.release = 0.01f;
-	volArEnv.setParameters(p);
 	volArEnv.reset();
 
 	osc1 = Oscillator(currentSampleRate);
