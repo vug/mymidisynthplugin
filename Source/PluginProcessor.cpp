@@ -194,15 +194,34 @@ AudioProcessorEditor* MyMidiSynthPlugInAudioProcessor::createEditor()
 //==============================================================================
 void MyMidiSynthPlugInAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+	std::unique_ptr<XmlElement> xml (new XmlElement("MyMidiSynthParams"));
+	xml->setAttribute("osc1Type", (int)osc1.type);
+	xml->setAttribute("osc2Type", (int)osc2.type);
+	xml->setAttribute("oscVolumesMix", oscVolumesMix);
+	xml->setAttribute("freqShiftInSemitones", osc2.freqShiftSemitones);
+	xml->setAttribute("freqShiftInCents", osc2.freqShiftCents);
+	xml->setAttribute("adsrAttack", volArEnv.getParameters().attack);
+	xml->setAttribute("adsrRelease", volArEnv.getParameters().release);
+	copyXmlToBinary(*xml, destData);
 }
 
 void MyMidiSynthPlugInAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+	std::unique_ptr<XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+	if (xmlState.get() == nullptr || !xmlState->hasTagName("MyMidiSynthParams")) {
+		return;
+	}
+	osc1.type = (oscillatorTypes)xmlState->getIntAttribute("osc1Type");
+	osc2.type = (oscillatorTypes)xmlState->getIntAttribute("osc2Type");
+	oscVolumesMix = xmlState->getDoubleAttribute("oscVolumesMix");
+	osc2.freqShiftSemitones = xmlState->getDoubleAttribute("freqShiftInSemitones");
+	osc2.freqShiftCents = xmlState->getDoubleAttribute("freqShiftInCents");
+	ADSR::Parameters p;
+	p.attack = xmlState->getDoubleAttribute("adsrAttack");
+	p.decay = 0.0f;
+	p.sustain = 1.0f;
+	p.release = xmlState->getDoubleAttribute("adsrRelease");
+	volArEnv.setParameters(p);
 }
 
 //==============================================================================
