@@ -29,7 +29,7 @@ double Oscillator::oscillate()
 		x = std::fmod(phase / MathConstants<double>::twoPi, 1.0);
 		break;
 	case oscillatorTypes::square:
-		x = std::fmod(phase, MathConstants<double>::twoPi) < MathConstants<double>::pi;
+			x = (std::fmod(phase, MathConstants<double>::twoPi) < MathConstants<double>::pi) * 2.0 - 1.0;
 		break;
 	}
 
