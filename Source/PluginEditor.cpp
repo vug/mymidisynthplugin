@@ -14,6 +14,13 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 	};
 	osc1TypeSelect.setSelectedId((int)processor.osc1.type);
 
+	addAndMakeVisible(osc1BandLimited);
+	osc1BandLimited.setButtonText("BL");
+	osc1BandLimited.onClick = [this] {
+		processor.osc1.isBandLimited = osc1BandLimited.getToggleState();
+	};
+	osc1BandLimited.setToggleState(processor.osc1.isBandLimited, dontSendNotification);
+
 	addAndMakeVisible(osc2TypeSelect);
 	osc2TypeSelect.addItem("Sinusoidal", (int)oscillatorTypes::sinusoidal);
 	osc2TypeSelect.addItem("Saw Tooth", (int)oscillatorTypes::sawtooth);
@@ -22,6 +29,14 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 		processor.osc2.type = (oscillatorTypes)osc2TypeSelect.getSelectedId(); 
 	};
 	osc2TypeSelect.setSelectedId((int)processor.osc2.type);
+
+	addAndMakeVisible(osc2BandLimited);
+	osc2BandLimited.setButtonText("BL");
+	osc2BandLimited.onClick = [this] {
+		processor.osc2.isBandLimited = osc2BandLimited.getToggleState();
+	};
+	osc2BandLimited.setToggleState(processor.osc2.isBandLimited, dontSendNotification);
+
 
 	addAndMakeVisible(shiftSemitonesKnob);
 	shiftSemitonesKnob.setSliderStyle(Slider::Rotary);
@@ -107,10 +122,12 @@ void MyMidiSynthPlugInAudioProcessorEditor::paint (Graphics& g)
 void MyMidiSynthPlugInAudioProcessorEditor::resized()
 {
 	osc1TypeSelect.setBounds(10, 10, 100, 20);
+	osc1BandLimited.setBounds(10, 40, 50, 30);
 	oscMixSlider.setBounds(120, 10, 100, 20);
 	osc2TypeSelect.setBounds(240, 10, 100, 20);
-	shiftSemitonesKnob.setBounds(240, 40, 50, 50);
-	shiftCentsKnob.setBounds(310, 40, 50, 50);
+	osc2BandLimited.setBounds(240, 40, 50, 30);
+	shiftSemitonesKnob.setBounds(240, 60, 50, 50);
+	shiftCentsKnob.setBounds(310, 60, 50, 50);
 
 	envAttackSlider.setBounds(50, 40, 30, 80);
 	envReleaseSlider.setBounds(80, 40, 30, 80);

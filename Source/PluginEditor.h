@@ -32,6 +32,8 @@ private:
     MyMidiSynthPlugInAudioProcessor& processor;
 	ComboBox osc1TypeSelect;
 	ComboBox osc2TypeSelect;
+	ToggleButton osc1BandLimited;
+	ToggleButton osc2BandLimited;
 	Slider shiftSemitonesKnob;
 	Slider shiftCentsKnob;
 	Slider oscMixSlider;
