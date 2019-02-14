@@ -3,8 +3,9 @@
 
 enum class oscillatorTypes : int {
 	sinusoidal = 1,
-	sawtooth = 2,
-	square
+	triangle = 2,
+	sawtooth = 3,
+	square = 4
 };
 
 class Oscillator

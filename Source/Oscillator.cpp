@@ -28,6 +28,21 @@ double Oscillator::oscillate()
 	case oscillatorTypes::sinusoidal:
 		x = std::sin(phase);
 		break;
+	case oscillatorTypes::triangle:
+		if (isBandLimited) {
+			numHarmonics = nyquistFrequency / f;
+			for (int n = 1; n <= numHarmonics; n++) {
+				int k = 2 * n - 1;
+				x += ((n % 2 == 0) ? 1 : -1) * std::sin(k * phase) / (k * k);
+			}
+			x = x * 8 / (float_Pi * float_Pi);
+		}
+		else {
+			double md = std::fmod(phase, MathConstants<double>::twoPi);
+			x = (md < MathConstants<double>::pi) ? md / MathConstants<double>::twoPi : 1.0 - md / MathConstants<double>::twoPi;
+			x = 4.0 * x - 1.0;
+		}
+		break;
 	case oscillatorTypes::sawtooth:
 		if (isBandLimited) {
 			numHarmonics = nyquistFrequency / f;
