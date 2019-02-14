@@ -19,6 +19,7 @@ public:
 	double frequency = 220.0;
 	int freqShiftSemitones = 0;
 	int freqShiftCents = 0;
+	bool isBandLimited = true;
 
 private:
 	double phase = 0.0;
