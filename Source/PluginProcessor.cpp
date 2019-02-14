@@ -196,7 +196,9 @@ void MyMidiSynthPlugInAudioProcessor::getStateInformation (MemoryBlock& destData
 {
 	std::unique_ptr<XmlElement> xml (new XmlElement("MyMidiSynthParams"));
 	xml->setAttribute("osc1Type", (int)osc1.type);
+	xml->setAttribute("osc1isBandLimited", osc1.isBandLimited);
 	xml->setAttribute("osc2Type", (int)osc2.type);
+	xml->setAttribute("osc2isBandLimited", osc2.isBandLimited);
 	xml->setAttribute("oscVolumesMix", oscVolumesMix);
 	xml->setAttribute("freqShiftInSemitones", osc2.freqShiftSemitones);
 	xml->setAttribute("freqShiftInCents", osc2.freqShiftCents);
@@ -212,7 +214,9 @@ void MyMidiSynthPlugInAudioProcessor::setStateInformation (const void* data, int
 		return;
 	}
 	osc1.type = (oscillatorTypes)xmlState->getIntAttribute("osc1Type");
+	osc1.isBandLimited = xmlState->getBoolAttribute("osc1isBandLimited");
 	osc2.type = (oscillatorTypes)xmlState->getIntAttribute("osc2Type");
+	osc2.isBandLimited = xmlState->getBoolAttribute("osc2isBandLimited");
 	oscVolumesMix = xmlState->getDoubleAttribute("oscVolumesMix");
 	osc2.freqShiftSemitones = xmlState->getDoubleAttribute("freqShiftInSemitones");
 	osc2.freqShiftCents = xmlState->getDoubleAttribute("freqShiftInCents");

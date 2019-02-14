@@ -32,13 +32,14 @@ private:
     MyMidiSynthPlugInAudioProcessor& processor;
 	ComboBox osc1TypeSelect;
 	ComboBox osc2TypeSelect;
+	ToggleButton osc1BandLimited;
+	ToggleButton osc2BandLimited;
 	Slider shiftSemitonesKnob;
 	Slider shiftCentsKnob;
 	Slider oscMixSlider;
 	Slider envAttackSlider;
 	Slider envReleaseSlider;
 
-	double getFreqShiftMultiplier();
 	ADSR::Parameters getVolumeEnvelopeParameters();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MyMidiSynthPlugInAudioProcessorEditor)
