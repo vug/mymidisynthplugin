@@ -38,7 +38,6 @@ private:
 	Slider envAttackSlider;
 	Slider envReleaseSlider;
 
-	double getFreqShiftMultiplier();
 	ADSR::Parameters getVolumeEnvelopeParameters();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MyMidiSynthPlugInAudioProcessorEditor)
