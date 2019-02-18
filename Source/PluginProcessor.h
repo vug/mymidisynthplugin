@@ -79,6 +79,7 @@ private:
 	long timeInSamples = 0l;
 	IIRFilter filter;
 	AudioBuffer<double> delayBuffer;
+	int delayWriteIndex = 0; // in samples, relative to circular delay buffer
 
 	std::unordered_map<int, long> pressedNotes;
 

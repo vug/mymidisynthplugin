@@ -100,7 +100,8 @@ void MyMidiSynthPlugInAudioProcessor::prepareToPlay (double sampleRate, int)  //
 	osc1 = Oscillator(currentSampleRate);
 	osc2 = Oscillator(currentSampleRate);
 
-	delayBuffer.setSize(2, (int)currentSampleRate);
+	delayBuffer.setSize(1, 2 * (int)currentSampleRate);  // 2 seconds of maximum delay
+	reset();
 }
 
 void MyMidiSynthPlugInAudioProcessor::releaseResources()
@@ -162,8 +163,8 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 	}
 
 	// Sample based block processing
+	int dWriteIx = delayWriteIndex;
 	for (int i = 0; i < buffer.getNumSamples(); i++) {
-
 		// Synthesize Oscillators
 		double x1 = osc1.oscillate();
 		double x2 = osc2.oscillate();
@@ -174,7 +175,7 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		double amp = arEnv.getNextSample();
 		double envelopedSample = amp * sourceSample;
 
-		// Filter (w/Envelope)
+		// Low-Pass Filter (w/Envelope) Effect
 		double co; 
 		if (isFilterUsingEnvelope) {
 			co = amp * cutOff + (1.0 - amp) * 20.0;
@@ -185,14 +186,26 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		filter.setCoefficients(IIRCoefficients::makeLowPass(currentSampleRate, co, resonance));
 		double filteredSample = filter.processSingleSampleRaw((float)envelopedSample);
 
+		// Delay Effect
+		int dIxDiff = (int)(delayDuration * currentSampleRate);  // readIndex is this much earlier than writeIndex
+		int dSize = delayBuffer.getNumSamples();
+		int dReadIx = ((dWriteIx - dIxDiff) % dSize + dSize) % dSize;  // addition and second modulus is to get a positive index
+		double dReadVal = delayBuffer.getSample(0, dReadIx);
+		double delayedSample = filteredSample + dReadVal;
+		delayBuffer.setSample(0, dWriteIx, delayedSample * delayFeedback);
+		if (++dWriteIx >= dSize) {  // dReadIx will be computed accordingly
+			dWriteIx = 0;
+		}
+
 		// Master Volume and Output
 		double vol = masterVolume.getNextValue();
-		float outputSample = (float)(vol * filteredSample);
+		float outputSample = (float)(vol * delayedSample);
 		for (auto channel = buffer.getNumChannels() - 1; channel >= 0; --channel)  // left, right channel agnostic
 		{
 			buffer.addSample(channel, i, outputSample);
 		}
 	}
+	delayWriteIndex = dWriteIx;
 
 	timeInSamples += buffer.getNumSamples();
 }
