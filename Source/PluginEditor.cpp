@@ -137,6 +137,13 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 	addAndMakeVisible(resonanceLabel);
 	resonanceLabel.setText("resonance", dontSendNotification);
 
+	addAndMakeVisible(filterUsingEnvelope);
+	filterUsingEnvelope.setButtonText("use envelope");
+	filterUsingEnvelope.onClick = [this] {
+		processor.isFilterUsingEnvelope = filterUsingEnvelope.getToggleState();
+	};
+	filterUsingEnvelope.setToggleState(processor.isFilterUsingEnvelope, dontSendNotification);
+
     setSize (400, 300);
 }
 
@@ -187,4 +194,5 @@ void MyMidiSynthPlugInAudioProcessorEditor::resized()
 	cutOffLabel.setBounds(140, 85, 100, 15);
 	resonanceSlider.setBounds(130, 135, 100, 30);
 	resonanceLabel.setBounds(140, 125, 100, 15);
+	filterUsingEnvelope.setBounds(135, 155, 100, 30);
 }
