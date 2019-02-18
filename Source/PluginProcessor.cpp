@@ -163,7 +163,13 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 
 		double currentSample = vol * a * ((1.0 - m) * x1 + m * x2);
 
-		float co = a * cutOff + (1.0 - a) * 20.0;
+		double co; 
+		if (isFilterUsingEnvelope) {
+			co = a * cutOff + (1.0 - a) * 20.0;
+		}
+		else {
+			co = cutOff;
+		}
 		filter.setCoefficients(IIRCoefficients::makeLowPass(currentSampleRate, co, resonance));
 		currentSample = filter.processSingleSampleRaw(currentSample);
 

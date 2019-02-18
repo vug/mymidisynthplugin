@@ -63,6 +63,7 @@ public:
 	ADSR volArEnv;  // AR (Attack/Release) only envelope
 	double cutOff = 22000.0;
 	double resonance = 1.0;
+	bool isFilterUsingEnvelope = false;
 
 private:
     //==============================================================================
