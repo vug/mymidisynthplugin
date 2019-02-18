@@ -140,7 +140,9 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		}
 	}
 
-	if (!pressedNotes.empty())  // TODO: frequency changes are snapped at block beginnings. Note right. They should happen the moment the note came in? Well... Note were already pressed actually...
+	// TODO: frequency changes are snapped at block beginnings. They should happen the moment the note came in? 
+	// Well... Notes were already pressed, and given via midiMessages, actually...
+	if (!pressedNotes.empty())
 	{
 		noteFrequency = MidiMessage::getMidiNoteInHertz(getMostRecentNote());
 		osc1.frequency = noteFrequency;
