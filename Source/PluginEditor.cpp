@@ -92,9 +92,9 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 	envAttackSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	envAttackSlider.setPopupDisplayEnabled(true, true, this, 2000);
 	envAttackSlider.onValueChange = [this] {
-		processor.volArEnv.setParameters(getVolumeEnvelopeParameters());
+		processor.arEnv.setParameters(getVolumeEnvelopeParameters());
 	};
-	envAttackSlider.setValue(processor.volArEnv.getParameters().attack);
+	envAttackSlider.setValue(processor.arEnv.getParameters().attack);
 	addAndMakeVisible(envAttackLabel);
 	envAttackLabel.setText("attack", dontSendNotification);
 
@@ -105,9 +105,9 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 	envReleaseSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	envReleaseSlider.setPopupDisplayEnabled(true, true, this, 2000);
 	envReleaseSlider.onValueChange = [this] {
-		processor.volArEnv.setParameters(getVolumeEnvelopeParameters());
+		processor.arEnv.setParameters(getVolumeEnvelopeParameters());
 	};
-	envReleaseSlider.setValue(processor.volArEnv.getParameters().release);
+	envReleaseSlider.setValue(processor.arEnv.getParameters().release);
 	addAndMakeVisible(envReleaseLabel);
 	envReleaseLabel.setText("release", dontSendNotification);
 

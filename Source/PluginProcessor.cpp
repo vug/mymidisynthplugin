@@ -90,8 +90,8 @@ void MyMidiSynthPlugInAudioProcessor::prepareToPlay (double sampleRate, int)  //
 	currentSampleRate = sampleRate;
 	masterVolume.setValue(1.0);
 	masterVolume.reset(sampleRate, 0.01);
-	volArEnv.setSampleRate(sampleRate);
-	volArEnv.reset();
+	arEnv.setSampleRate(sampleRate);
+	arEnv.reset();
 
 	osc1 = Oscillator(currentSampleRate);
 	osc2 = Oscillator(currentSampleRate);
@@ -147,16 +147,16 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		noteFrequency = MidiMessage::getMidiNoteInHertz(getMostRecentNote());
 		osc1.frequency = noteFrequency;
 		osc2.frequency = noteFrequency;
-		volArEnv.noteOn();  // switches to "attack" State at every block, which prevents triggering of decay and sustain phases, hence AR-Envelope.
+		arEnv.noteOn();  // switches to "attack" State at every block, which prevents triggering of decay and sustain phases, hence AR-Envelope.
 	}
 	else
 	{
-		volArEnv.noteOff();
+		arEnv.noteOff();
 	}
 
 	for (int i = 0; i < buffer.getNumSamples(); i++) {
 		double vol = masterVolume.getNextValue();
-		float a = volArEnv.getNextSample();
+		float a = arEnv.getNextSample();
 		double x1 = osc1.oscillate();
 		double x2 = osc2.oscillate();
 		double m = oscVolumesMix;
@@ -171,7 +171,7 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 			co = cutOff;
 		}
 		filter.setCoefficients(IIRCoefficients::makeLowPass(currentSampleRate, co, resonance));
-		currentSample = filter.processSingleSampleRaw(currentSample);
+		currentSample = filter.processSingleSampleRaw((float)currentSample);
 
 		for (auto channel = buffer.getNumChannels() - 1; channel >= 0; --channel)  // left, right channel agnostic
 		{
@@ -215,8 +215,8 @@ void MyMidiSynthPlugInAudioProcessor::getStateInformation (MemoryBlock& destData
 	xml->setAttribute("oscVolumesMix", oscVolumesMix);
 	xml->setAttribute("freqShiftInSemitones", osc2.freqShiftSemitones);
 	xml->setAttribute("freqShiftInCents", osc2.freqShiftCents);
-	xml->setAttribute("adsrAttack", volArEnv.getParameters().attack);
-	xml->setAttribute("adsrRelease", volArEnv.getParameters().release);
+	xml->setAttribute("adsrAttack", arEnv.getParameters().attack);
+	xml->setAttribute("adsrRelease", arEnv.getParameters().release);
 	xml->setAttribute("cutOff", cutOff);
 	xml->setAttribute("resonance", resonance);
 	copyXmlToBinary(*xml, destData);
@@ -240,7 +240,7 @@ void MyMidiSynthPlugInAudioProcessor::setStateInformation (const void* data, int
 	p.decay = 0.0f;
 	p.sustain = 1.0f;
 	p.release = (float)xmlState->getDoubleAttribute("adsrRelease");
-	volArEnv.setParameters(p);
+	arEnv.setParameters(p);
 	cutOff = xmlState->getDoubleAttribute("cutOff");
 	resonance = xmlState->getDoubleAttribute("resonance");
 }
