@@ -211,6 +211,8 @@ void MyMidiSynthPlugInAudioProcessor::getStateInformation (MemoryBlock& destData
 	xml->setAttribute("freqShiftInCents", osc2.freqShiftCents);
 	xml->setAttribute("adsrAttack", volArEnv.getParameters().attack);
 	xml->setAttribute("adsrRelease", volArEnv.getParameters().release);
+	xml->setAttribute("cutOff", cutOff);
+	xml->setAttribute("resonance", resonance);
 	copyXmlToBinary(*xml, destData);
 }
 
@@ -233,6 +235,8 @@ void MyMidiSynthPlugInAudioProcessor::setStateInformation (const void* data, int
 	p.sustain = 1.0f;
 	p.release = xmlState->getDoubleAttribute("adsrRelease");
 	volArEnv.setParameters(p);
+	cutOff = xmlState->getDoubleAttribute("cutOff");
+	resonance = xmlState->getDoubleAttribute("resonance");
 }
 
 //==============================================================================
