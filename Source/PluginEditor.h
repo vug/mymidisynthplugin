@@ -39,6 +39,8 @@ private:
 	Slider oscMixSlider;
 	Slider envAttackSlider;
 	Slider envReleaseSlider;
+	Slider cutOffSlider;
+	Slider resonanceSlider;
 
 	ADSR::Parameters getVolumeEnvelopeParameters();
 
