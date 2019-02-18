@@ -129,6 +129,7 @@ bool MyMidiSynthPlugInAudioProcessor::isBusesLayoutSupported (const BusesLayout&
 
 void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
+	// Process notes
 	int time;
 	MidiMessage msg;
 	for (MidiBuffer::Iterator i(midiMessages); i.getNextEvent(msg, time);) {
@@ -154,28 +155,36 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		arEnv.noteOff();
 	}
 
+	// Sample based block processing
 	for (int i = 0; i < buffer.getNumSamples(); i++) {
-		double vol = masterVolume.getNextValue();
-		float a = arEnv.getNextSample();
+
+		// Synthesize Oscillators
 		double x1 = osc1.oscillate();
 		double x2 = osc2.oscillate();
 		double m = oscVolumesMix;
+		double sourceSample = ((1.0 - m) * x1 + m * x2);
 
-		double currentSample = vol * a * ((1.0 - m) * x1 + m * x2);
+		// Amplitude Envelope
+		double amp = arEnv.getNextSample();
+		double envelopedSample = amp * sourceSample;
 
+		// Filter (w/Envelope)
 		double co; 
 		if (isFilterUsingEnvelope) {
-			co = a * cutOff + (1.0 - a) * 20.0;
+			co = amp * cutOff + (1.0 - amp) * 20.0;
 		}
 		else {
 			co = cutOff;
 		}
 		filter.setCoefficients(IIRCoefficients::makeLowPass(currentSampleRate, co, resonance));
-		currentSample = filter.processSingleSampleRaw((float)currentSample);
+		double filteredSample = filter.processSingleSampleRaw((float)envelopedSample);
 
+		// Master Volume and Output
+		double vol = masterVolume.getNextValue();
+		float outputSample = (float)(vol * filteredSample);
 		for (auto channel = buffer.getNumChannels() - 1; channel >= 0; --channel)  // left, right channel agnostic
 		{
-			buffer.addSample(channel, i, (float)currentSample);
+			buffer.addSample(channel, i, outputSample);
 		}
 	}
 
