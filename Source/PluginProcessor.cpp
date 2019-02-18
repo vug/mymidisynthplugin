@@ -85,6 +85,10 @@ void MyMidiSynthPlugInAudioProcessor::changeProgramName (int, const String&)  //
 }
 
 //==============================================================================
+void MyMidiSynthPlugInAudioProcessor::reset() {
+	delayBuffer.clear();
+}
+
 void MyMidiSynthPlugInAudioProcessor::prepareToPlay (double sampleRate, int)  // samplesPerBlock
 {
 	currentSampleRate = sampleRate;
@@ -95,6 +99,8 @@ void MyMidiSynthPlugInAudioProcessor::prepareToPlay (double sampleRate, int)  //
 
 	osc1 = Oscillator(currentSampleRate);
 	osc2 = Oscillator(currentSampleRate);
+
+	delayBuffer.setSize(2, (int)currentSampleRate);
 }
 
 void MyMidiSynthPlugInAudioProcessor::releaseResources()
