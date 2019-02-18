@@ -14,9 +14,11 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 		processor.osc1.type = (oscillatorTypes)osc1TypeSelect.getSelectedId(); 
 	};
 	osc1TypeSelect.setSelectedId((int)processor.osc1.type);
+	addAndMakeVisible(osc1TypeLabel);
+	osc1TypeLabel.setText("Osc1 Type", dontSendNotification);
 
 	addAndMakeVisible(osc1BandLimited);
-	osc1BandLimited.setButtonText("BL");
+	osc1BandLimited.setButtonText("band-limited");
 	osc1BandLimited.onClick = [this] {
 		processor.osc1.isBandLimited = osc1BandLimited.getToggleState();
 	};
@@ -31,9 +33,11 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 		processor.osc2.type = (oscillatorTypes)osc2TypeSelect.getSelectedId(); 
 	};
 	osc2TypeSelect.setSelectedId((int)processor.osc2.type);
+	addAndMakeVisible(osc2TypeLabel);
+	osc2TypeLabel.setText("Osc2 Type", dontSendNotification);
 
 	addAndMakeVisible(osc2BandLimited);
-	osc2BandLimited.setButtonText("BL");
+	osc2BandLimited.setButtonText("band-limited");
 	osc2BandLimited.onClick = [this] {
 		processor.osc2.isBandLimited = osc2BandLimited.getToggleState();
 	};
@@ -51,6 +55,8 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 		processor.osc2.freqShiftSemitones = shiftSemitonesKnob.getValue();
 	};
 	shiftSemitonesKnob.setValue(processor.osc2.freqShiftSemitones);
+	addAndMakeVisible(shiftSemitonesLabel);
+	shiftSemitonesLabel.setText("transpose", dontSendNotification);
 
 	addAndMakeVisible(shiftCentsKnob);
 	shiftCentsKnob.setSliderStyle(Slider::Rotary);
@@ -63,6 +69,9 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 		processor.osc2.freqShiftCents = shiftCentsKnob.getValue();
 	};
 	shiftCentsKnob.setValue(processor.osc2.freqShiftCents);
+	addAndMakeVisible(shiftCentsLabel);
+	shiftCentsLabel.setText("detune", dontSendNotification);
+
 
 	addAndMakeVisible(oscMixSlider);
 	oscMixSlider.setSliderStyle(Slider::LinearHorizontal);
@@ -73,30 +82,39 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 		processor.oscVolumesMix = oscMixSlider.getValue();
 	};
 	oscMixSlider.setValue(processor.oscVolumesMix);
+	addAndMakeVisible(oscMixLabel);
+	oscMixLabel.setText("Osc Mix", dontSendNotification);
 
 	addAndMakeVisible(envAttackSlider);
 	envAttackSlider.setSliderStyle(Slider::LinearVertical);
 	envAttackSlider.setRange(0.01, 2.0, 0.01);
+	envAttackSlider.setTextValueSuffix(" sec");
 	envAttackSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	envAttackSlider.setPopupDisplayEnabled(true, true, this, 2000);
 	envAttackSlider.onValueChange = [this] {
 		processor.volArEnv.setParameters(getVolumeEnvelopeParameters());
 	};
 	envAttackSlider.setValue(processor.volArEnv.getParameters().attack);
+	addAndMakeVisible(envAttackLabel);
+	envAttackLabel.setText("attack", dontSendNotification);
 
 	addAndMakeVisible(envReleaseSlider);
 	envReleaseSlider.setSliderStyle(Slider::LinearVertical);
 	envReleaseSlider.setRange(0.01, 2.0, 0.01);
+	envReleaseSlider.setTextValueSuffix(" sec");
 	envReleaseSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	envReleaseSlider.setPopupDisplayEnabled(true, true, this, 2000);
 	envReleaseSlider.onValueChange = [this] {
 		processor.volArEnv.setParameters(getVolumeEnvelopeParameters());
 	};
 	envReleaseSlider.setValue(processor.volArEnv.getParameters().release);
+	addAndMakeVisible(envReleaseLabel);
+	envReleaseLabel.setText("release", dontSendNotification);
 
 	addAndMakeVisible(cutOffSlider);
 	cutOffSlider.setSliderStyle(Slider::LinearHorizontal);
 	cutOffSlider.setRange(20.0, 22000.0, 10.0);
+	cutOffSlider.setTextValueSuffix(" Hz");
 	cutOffSlider.setSkewFactorFromMidPoint(2000.0);
 	cutOffSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	cutOffSlider.setPopupDisplayEnabled(true, true, this, 2000);
@@ -104,6 +122,8 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 		processor.cutOff = cutOffSlider.getValue();
 	};
 	cutOffSlider.setValue(processor.cutOff);
+	addAndMakeVisible(cutOffLabel);
+	cutOffLabel.setText("cut-off", dontSendNotification);
 
 	addAndMakeVisible(resonanceSlider);
 	resonanceSlider.setSliderStyle(Slider::LinearHorizontal);
@@ -114,6 +134,8 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 		processor.resonance = resonanceSlider.getValue();
 	};
 	resonanceSlider.setValue(processor.resonance);
+	addAndMakeVisible(resonanceLabel);
+	resonanceLabel.setText("resonance", dontSendNotification);
 
     setSize (400, 300);
 }
@@ -139,21 +161,30 @@ void MyMidiSynthPlugInAudioProcessorEditor::paint (Graphics& g)
 
     g.setColour (Colours::white);
     g.setFont (15.0f);
-    g.drawFittedText ("My first VST3!", getLocalBounds(), Justification::centred, 1);
+    g.drawFittedText ("My first VST3!", getLocalBounds(), Justification::bottom, 1);
 }
 
 void MyMidiSynthPlugInAudioProcessorEditor::resized()
 {
-	osc1TypeSelect.setBounds(10, 10, 100, 20);
-	osc1BandLimited.setBounds(10, 40, 50, 30);
-	oscMixSlider.setBounds(120, 10, 100, 20);
-	osc2TypeSelect.setBounds(240, 10, 100, 20);
-	osc2BandLimited.setBounds(240, 40, 50, 30);
-	shiftSemitonesKnob.setBounds(240, 60, 50, 50);
-	shiftCentsKnob.setBounds(310, 60, 50, 50);
+	osc1TypeSelect.setBounds(10, 25, 100, 20);
+	osc1TypeLabel.setBounds(10, 5, 100, 15);
+	osc1BandLimited.setBounds(10, 45, 100, 30);
+	oscMixSlider.setBounds(120, 20, 100, 20);
+	oscMixLabel.setBounds(120, 5, 100, 15);
+	osc2TypeSelect.setBounds(240, 25, 100, 20);
+	osc2TypeLabel.setBounds(240, 5, 100, 15);
+	osc2BandLimited.setBounds(240, 45, 100, 30);
+	shiftSemitonesKnob.setBounds(240, 100, 50, 50);
+	shiftSemitonesLabel.setBounds(230, 80, 100, 20);
+	shiftCentsKnob.setBounds(310, 100, 50, 50);
+	shiftCentsLabel.setBounds(310, 80, 100, 20);
 
-	envAttackSlider.setBounds(50, 40, 30, 80);
-	envReleaseSlider.setBounds(80, 40, 30, 80);
-	cutOffSlider.setBounds(50, 150, 100, 30);
-	resonanceSlider.setBounds(50, 180, 100, 30);
+	envAttackSlider.setBounds(20, 90, 30, 80);
+	envAttackLabel.setBounds(10, 80, 50, 20);
+	envReleaseSlider.setBounds(70, 90, 30, 80);
+	envReleaseLabel.setBounds(60, 80, 50, 20);
+	cutOffSlider.setBounds(130, 95, 100, 30);
+	cutOffLabel.setBounds(140, 85, 100, 15);
+	resonanceSlider.setBounds(130, 135, 100, 30);
+	resonanceLabel.setBounds(140, 125, 100, 15);
 }

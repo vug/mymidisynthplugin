@@ -31,16 +31,25 @@ private:
     // access the processor object that created it.
     MyMidiSynthPlugInAudioProcessor& processor;
 	ComboBox osc1TypeSelect;
+	Label osc1TypeLabel;
 	ComboBox osc2TypeSelect;
+	Label osc2TypeLabel;
 	ToggleButton osc1BandLimited;
 	ToggleButton osc2BandLimited;
 	Slider shiftSemitonesKnob;
+	Label shiftSemitonesLabel;
 	Slider shiftCentsKnob;
+	Label shiftCentsLabel;
 	Slider oscMixSlider;
+	Label oscMixLabel;
 	Slider envAttackSlider;
+	Label envAttackLabel;
 	Slider envReleaseSlider;
+	Label envReleaseLabel;
 	Slider cutOffSlider;
+	Label cutOffLabel;
 	Slider resonanceSlider;
+	Label resonanceLabel;
 
 	ADSR::Parameters getVolumeEnvelopeParameters();
 
