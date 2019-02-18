@@ -71,21 +71,21 @@ int MyMidiSynthPlugInAudioProcessor::getCurrentProgram()
     return 0;
 }
 
-void MyMidiSynthPlugInAudioProcessor::setCurrentProgram (int index)
+void MyMidiSynthPlugInAudioProcessor::setCurrentProgram (int)  // index
 {
 }
 
-const String MyMidiSynthPlugInAudioProcessor::getProgramName (int index)
+const String MyMidiSynthPlugInAudioProcessor::getProgramName (int)  // index
 {
     return {};
 }
 
-void MyMidiSynthPlugInAudioProcessor::changeProgramName (int index, const String& newName)
+void MyMidiSynthPlugInAudioProcessor::changeProgramName (int, const String&)  // index, newName
 {
 }
 
 //==============================================================================
-void MyMidiSynthPlugInAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void MyMidiSynthPlugInAudioProcessor::prepareToPlay (double sampleRate, int)  // samplesPerBlock
 {
 	currentSampleRate = sampleRate;
 	masterVolume.setValue(1.0);
@@ -130,13 +130,13 @@ bool MyMidiSynthPlugInAudioProcessor::isBusesLayoutSupported (const BusesLayout&
 void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
 	int time;
-	MidiMessage m;
-	for (MidiBuffer::Iterator i(midiMessages); i.getNextEvent(m, time);) {
-		if (m.isNoteOn()) {
-			pressedNotes[m.getNoteNumber()] = timeInSamples + m.getTimeStamp();
+	MidiMessage msg;
+	for (MidiBuffer::Iterator i(midiMessages); i.getNextEvent(msg, time);) {
+		if (msg.isNoteOn()) {
+			pressedNotes[msg.getNoteNumber()] = timeInSamples + (long)msg.getTimeStamp();
 		}
-		else if (m.isNoteOff()) {
-			pressedNotes.erase(m.getNoteNumber());
+		else if (msg.isNoteOff()) {
+			pressedNotes.erase(msg.getNoteNumber());
 		}
 	}
 
@@ -153,16 +153,16 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 	}
 
 	for (int i = 0; i < buffer.getNumSamples(); i++) {
-		float vol = masterVolume.getNextValue();
+		double vol = masterVolume.getNextValue();
 		float a = volArEnv.getNextSample();
 		double x1 = osc1.oscillate();
 		double x2 = osc2.oscillate();
 		double m = oscVolumesMix;
-		float currentSample = vol * a * ((1.0 - m) * x1 + m * x2);
+		double currentSample = vol * a * ((1.0 - m) * x1 + m * x2);
 
 		for (auto channel = buffer.getNumChannels() - 1; channel >= 0; --channel)  // left, right channel agnostic
 		{
-			buffer.addSample(channel, i, currentSample);
+			buffer.addSample(channel, i, (float)currentSample);
 		}
 	}
 
@@ -227,13 +227,13 @@ void MyMidiSynthPlugInAudioProcessor::setStateInformation (const void* data, int
 	osc2.type = (oscillatorTypes)xmlState->getIntAttribute("osc2Type");
 	osc2.isBandLimited = xmlState->getBoolAttribute("osc2isBandLimited");
 	oscVolumesMix = xmlState->getDoubleAttribute("oscVolumesMix");
-	osc2.freqShiftSemitones = xmlState->getDoubleAttribute("freqShiftInSemitones");
-	osc2.freqShiftCents = xmlState->getDoubleAttribute("freqShiftInCents");
+	osc2.freqShiftSemitones = (int)xmlState->getDoubleAttribute("freqShiftInSemitones");
+	osc2.freqShiftCents = (int)xmlState->getDoubleAttribute("freqShiftInCents");
 	ADSR::Parameters p;
-	p.attack = xmlState->getDoubleAttribute("adsrAttack");
+	p.attack = (float)xmlState->getDoubleAttribute("adsrAttack");
 	p.decay = 0.0f;
 	p.sustain = 1.0f;
-	p.release = xmlState->getDoubleAttribute("adsrRelease");
+	p.release = (float)xmlState->getDoubleAttribute("adsrRelease");
 	volArEnv.setParameters(p);
 	cutOff = xmlState->getDoubleAttribute("cutOff");
 	resonance = xmlState->getDoubleAttribute("resonance");
