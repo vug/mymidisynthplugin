@@ -46,13 +46,13 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 
 	addAndMakeVisible(shiftSemitonesKnob);
 	shiftSemitonesKnob.setSliderStyle(Slider::Rotary);
-	shiftSemitonesKnob.setRotaryParameters(1.5 * float_Pi, 2.5 * float_Pi, false);
+	shiftSemitonesKnob.setRotaryParameters(1.5f * float_Pi, 2.5f * float_Pi, false);
 	shiftSemitonesKnob.setRange(-12, 12, 1.0);
 	shiftSemitonesKnob.setTextValueSuffix(" semitones");
 	shiftSemitonesKnob.setTextBoxStyle(Slider::NoTextBox, false, 60, 20);
 	shiftSemitonesKnob.setPopupDisplayEnabled(true, true, this, 2000);
 	shiftSemitonesKnob.onValueChange = [this] {
-		processor.osc2.freqShiftSemitones = shiftSemitonesKnob.getValue();
+		processor.osc2.freqShiftSemitones = (int)shiftSemitonesKnob.getValue();
 	};
 	shiftSemitonesKnob.setValue(processor.osc2.freqShiftSemitones);
 	addAndMakeVisible(shiftSemitonesLabel);
@@ -60,13 +60,13 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 
 	addAndMakeVisible(shiftCentsKnob);
 	shiftCentsKnob.setSliderStyle(Slider::Rotary);
-	shiftCentsKnob.setRotaryParameters(1.5 * float_Pi, 2.5 * float_Pi, false);
+	shiftCentsKnob.setRotaryParameters(1.5f * float_Pi, 2.5f * float_Pi, false);
 	shiftCentsKnob.setRange(-100, 100, 1.0);
 	shiftCentsKnob.setTextValueSuffix(" cents");
 	shiftCentsKnob.setTextBoxStyle(Slider::NoTextBox, false, 60, 20);
 	shiftCentsKnob.setPopupDisplayEnabled(true, true, this, 2000);
 	shiftCentsKnob.onValueChange = [this] {
-		processor.osc2.freqShiftCents = shiftCentsKnob.getValue();
+		processor.osc2.freqShiftCents = (int)shiftCentsKnob.getValue();
 	};
 	shiftCentsKnob.setValue(processor.osc2.freqShiftCents);
 	addAndMakeVisible(shiftCentsLabel);
@@ -142,10 +142,10 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 
 ADSR::Parameters MyMidiSynthPlugInAudioProcessorEditor::getVolumeEnvelopeParameters() {
 	ADSR::Parameters p;
-	p.attack = envAttackSlider.getValue();
+	p.attack = (float)envAttackSlider.getValue();
 	p.decay = 0.0;
 	p.sustain = 1.0;
-	p.release = envReleaseSlider.getValue();
+	p.release = (float)envReleaseSlider.getValue();
 	return p;
 }
 
