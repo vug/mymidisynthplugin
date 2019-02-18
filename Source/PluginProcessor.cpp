@@ -160,20 +160,18 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		double x1 = osc1.oscillate();
 		double x2 = osc2.oscillate();
 		double m = oscVolumesMix;
+
 		double currentSample = vol * a * ((1.0 - m) * x1 + m * x2);
+
+		float co = a * cutOff + (1.0 - a) * 20.0;
+		filter.setCoefficients(IIRCoefficients::makeLowPass(currentSampleRate, co, resonance));
+		currentSample = filter.processSingleSampleRaw(currentSample);
 
 		for (auto channel = buffer.getNumChannels() - 1; channel >= 0; --channel)  // left, right channel agnostic
 		{
 			buffer.addSample(channel, i, (float)currentSample);
 		}
 	}
-
-	filterLeft.setCoefficients(IIRCoefficients::makeLowPass(currentSampleRate, cutOff, resonance));
-	filterRight.setCoefficients(IIRCoefficients::makeLowPass(currentSampleRate, cutOff, resonance));
-	float* left = buffer.getWritePointer(0);
-	float* right = buffer.getWritePointer(1);
-	filterLeft.processSamples(left, buffer.getNumSamples());
-	filterRight.processSamples(right, buffer.getNumSamples());
 
 	timeInSamples += buffer.getNumSamples();
 }
