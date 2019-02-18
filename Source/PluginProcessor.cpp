@@ -166,6 +166,13 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		}
 	}
 
+	filterLeft.setCoefficients(IIRCoefficients::makeLowPass(currentSampleRate, cutOff, resonance));
+	filterRight.setCoefficients(IIRCoefficients::makeLowPass(currentSampleRate, cutOff, resonance));
+	float* left = buffer.getWritePointer(0);
+	float* right = buffer.getWritePointer(1);
+	filterLeft.processSamples(left, buffer.getNumSamples());
+	filterRight.processSamples(right, buffer.getNumSamples());
+
 	timeInSamples += buffer.getNumSamples();
 }
 

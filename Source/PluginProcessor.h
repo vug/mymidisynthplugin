@@ -73,6 +73,8 @@ private:
 	LinearSmoothedValue<double> masterVolume;  // overall Synth volume
 	int lastNoteNumber = -1;
 	long timeInSamples = 0l;
+	IIRFilter filterLeft;
+	IIRFilter filterRight;
 
 	std::unordered_map<int, long> pressedNotes;
 
