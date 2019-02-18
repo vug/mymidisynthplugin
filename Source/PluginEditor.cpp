@@ -94,6 +94,27 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 	};
 	envReleaseSlider.setValue(processor.volArEnv.getParameters().release);
 
+	addAndMakeVisible(cutOffSlider);
+	cutOffSlider.setSliderStyle(Slider::LinearHorizontal);
+	cutOffSlider.setRange(20.0, 22000.0, 10.0);
+	cutOffSlider.setSkewFactorFromMidPoint(2000.0);
+	cutOffSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	cutOffSlider.setPopupDisplayEnabled(true, true, this, 2000);
+	cutOffSlider.onValueChange = [this] {
+		processor.cutOff = cutOffSlider.getValue();
+	};
+	cutOffSlider.setValue(processor.cutOff);
+
+	addAndMakeVisible(resonanceSlider);
+	resonanceSlider.setSliderStyle(Slider::LinearHorizontal);
+	resonanceSlider.setRange(0.01, 5.0, 0.01);
+	resonanceSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	resonanceSlider.setPopupDisplayEnabled(true, true, this, 2000);
+	resonanceSlider.onValueChange = [this] {
+		processor.resonance = resonanceSlider.getValue();
+	};
+	resonanceSlider.setValue(processor.resonance);
+
     setSize (400, 300);
 }
 
@@ -133,4 +154,6 @@ void MyMidiSynthPlugInAudioProcessorEditor::resized()
 
 	envAttackSlider.setBounds(50, 40, 30, 80);
 	envReleaseSlider.setBounds(80, 40, 30, 80);
+	cutOffSlider.setBounds(50, 150, 100, 30);
+	resonanceSlider.setBounds(50, 180, 100, 30);
 }
