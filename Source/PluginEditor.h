@@ -50,6 +50,7 @@ private:
 	Label cutOffLabel;
 	Slider resonanceSlider;
 	Label resonanceLabel;
+	ToggleButton filterUsingEnvelope;
 
 	ADSR::Parameters getVolumeEnvelopeParameters();
 

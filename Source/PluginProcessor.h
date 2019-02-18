@@ -60,9 +60,10 @@ public:
 	Oscillator osc1;
 	Oscillator osc2;
 	double oscVolumesMix = 0.0;
-	ADSR volArEnv;  // AR (Attack/Release) only envelope
+	ADSR arEnv;  // AR (Attack/Release) only envelope
 	double cutOff = 22000.0;
 	double resonance = 1.0;
+	bool isFilterUsingEnvelope = false;
 
 private:
     //==============================================================================
@@ -73,8 +74,7 @@ private:
 	LinearSmoothedValue<double> masterVolume;  // overall Synth volume
 	int lastNoteNumber = -1;
 	long timeInSamples = 0l;
-	IIRFilter filterLeft;
-	IIRFilter filterRight;
+	IIRFilter filter;
 
 	std::unordered_map<int, long> pressedNotes;
 
