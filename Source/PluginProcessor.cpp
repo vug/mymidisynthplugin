@@ -219,6 +219,7 @@ void MyMidiSynthPlugInAudioProcessor::getStateInformation (MemoryBlock& destData
 	xml->setAttribute("adsrRelease", arEnv.getParameters().release);
 	xml->setAttribute("cutOff", cutOff);
 	xml->setAttribute("resonance", resonance);
+	xml->setAttribute("isFilterUsingEnvelope", isFilterUsingEnvelope);
 	copyXmlToBinary(*xml, destData);
 }
 
@@ -243,6 +244,7 @@ void MyMidiSynthPlugInAudioProcessor::setStateInformation (const void* data, int
 	arEnv.setParameters(p);
 	cutOff = xmlState->getDoubleAttribute("cutOff");
 	resonance = xmlState->getDoubleAttribute("resonance");
+	isFilterUsingEnvelope = xmlState->getBoolAttribute("isFilterUsingEnvelope");
 }
 
 //==============================================================================
