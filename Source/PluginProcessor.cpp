@@ -248,6 +248,8 @@ void MyMidiSynthPlugInAudioProcessor::getStateInformation (MemoryBlock& destData
 	xml->setAttribute("cutOff", cutOff);
 	xml->setAttribute("resonance", resonance);
 	xml->setAttribute("isFilterUsingEnvelope", isFilterUsingEnvelope);
+	xml->setAttribute("delayDuration", delayDuration);
+	xml->setAttribute("delayFeedback", delayFeedback);
 	copyXmlToBinary(*xml, destData);
 }
 
@@ -273,6 +275,8 @@ void MyMidiSynthPlugInAudioProcessor::setStateInformation (const void* data, int
 	cutOff = xmlState->getDoubleAttribute("cutOff");
 	resonance = xmlState->getDoubleAttribute("resonance");
 	isFilterUsingEnvelope = xmlState->getBoolAttribute("isFilterUsingEnvelope");
+	delayDuration = xmlState->getDoubleAttribute("delayDuration");
+	delayFeedback = xmlState->getDoubleAttribute("delayFeedback");
 }
 
 //==============================================================================
