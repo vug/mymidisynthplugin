@@ -65,8 +65,8 @@ public:
 	double cutOff = 22000.0;  // Hz
 	double resonance = 1.0;
 	bool isFilterUsingEnvelope = false;
-	double delayDuration = 0.5;  // sec
-	double delayFeedback = 0.9;
+	double delayDuration = 0.3;  // sec
+	double delayFeedback = 0.0;
 
 private:
     //==============================================================================
