@@ -32,6 +32,7 @@ public:
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
    #endif
 
+	void reset() override;
     void processBlock (AudioBuffer<float>&, MidiBuffer&) override;
 
     //==============================================================================
@@ -61,9 +62,11 @@ public:
 	Oscillator osc2;
 	double oscVolumesMix = 0.0;
 	ADSR arEnv;  // AR (Attack/Release) only envelope
-	double cutOff = 22000.0;
+	double cutOff = 22000.0;  // Hz
 	double resonance = 1.0;
 	bool isFilterUsingEnvelope = false;
+	double delayDuration = 0.3;  // sec
+	double delayFeedback = 0.0;
 
 private:
     //==============================================================================
@@ -75,6 +78,8 @@ private:
 	int lastNoteNumber = -1;
 	long timeInSamples = 0l;
 	IIRFilter filter;
+	AudioBuffer<double> delayBuffer;
+	int delayWriteIndex = 0; // in samples, relative to circular delay buffer
 
 	std::unordered_map<int, long> pressedNotes;
 

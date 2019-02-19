@@ -51,6 +51,10 @@ private:
 	Slider resonanceSlider;
 	Label resonanceLabel;
 	ToggleButton filterUsingEnvelope;
+	Slider delayDurationSlider;
+	Label delayDurationLabel;
+	Slider delayFeedbackSlider;
+	Label delayFeedbackLabel;
 
 	ADSR::Parameters getVolumeEnvelopeParameters();
 

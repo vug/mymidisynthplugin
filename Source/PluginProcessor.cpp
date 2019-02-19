@@ -85,6 +85,10 @@ void MyMidiSynthPlugInAudioProcessor::changeProgramName (int, const String&)  //
 }
 
 //==============================================================================
+void MyMidiSynthPlugInAudioProcessor::reset() {
+	delayBuffer.clear();
+}
+
 void MyMidiSynthPlugInAudioProcessor::prepareToPlay (double sampleRate, int)  // samplesPerBlock
 {
 	currentSampleRate = sampleRate;
@@ -95,6 +99,9 @@ void MyMidiSynthPlugInAudioProcessor::prepareToPlay (double sampleRate, int)  //
 
 	osc1 = Oscillator(currentSampleRate);
 	osc2 = Oscillator(currentSampleRate);
+
+	delayBuffer.setSize(1, 2 * (int)currentSampleRate);  // 2 seconds of maximum delay
+	reset();
 }
 
 void MyMidiSynthPlugInAudioProcessor::releaseResources()
@@ -129,6 +136,7 @@ bool MyMidiSynthPlugInAudioProcessor::isBusesLayoutSupported (const BusesLayout&
 
 void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
+	// Process notes
 	int time;
 	MidiMessage msg;
 	for (MidiBuffer::Iterator i(midiMessages); i.getNextEvent(msg, time);) {
@@ -154,30 +162,50 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		arEnv.noteOff();
 	}
 
+	// Sample based block processing
+	int dWriteIx = delayWriteIndex;
 	for (int i = 0; i < buffer.getNumSamples(); i++) {
-		double vol = masterVolume.getNextValue();
-		float a = arEnv.getNextSample();
+		// Synthesize Oscillators
 		double x1 = osc1.oscillate();
 		double x2 = osc2.oscillate();
 		double m = oscVolumesMix;
+		double sourceSample = ((1.0 - m) * x1 + m * x2);
 
-		double currentSample = vol * a * ((1.0 - m) * x1 + m * x2);
+		// Amplitude Envelope
+		double amp = arEnv.getNextSample();
+		double envelopedSample = amp * sourceSample;
 
+		// Low-Pass Filter (w/Envelope) Effect
 		double co; 
 		if (isFilterUsingEnvelope) {
-			co = a * cutOff + (1.0 - a) * 20.0;
+			co = amp * cutOff + (1.0 - amp) * 20.0;
 		}
 		else {
 			co = cutOff;
 		}
 		filter.setCoefficients(IIRCoefficients::makeLowPass(currentSampleRate, co, resonance));
-		currentSample = filter.processSingleSampleRaw((float)currentSample);
+		double filteredSample = filter.processSingleSampleRaw((float)envelopedSample);
 
+		// Delay Effect
+		int dIxDiff = (int)(delayDuration * currentSampleRate);  // readIndex is this much earlier than writeIndex
+		int dSize = delayBuffer.getNumSamples();
+		int dReadIx = ((dWriteIx - dIxDiff) % dSize + dSize) % dSize;  // addition and second modulus is to get a positive index
+		double dReadVal = delayBuffer.getSample(0, dReadIx);
+		double delayedSample = filteredSample + dReadVal;
+		delayBuffer.setSample(0, dWriteIx, delayedSample * delayFeedback);
+		if (++dWriteIx >= dSize) {  // dReadIx will be computed accordingly
+			dWriteIx = 0;
+		}
+
+		// Master Volume and Output
+		double vol = masterVolume.getNextValue();
+		float outputSample = (float)(vol * delayedSample);
 		for (auto channel = buffer.getNumChannels() - 1; channel >= 0; --channel)  // left, right channel agnostic
 		{
-			buffer.addSample(channel, i, (float)currentSample);
+			buffer.addSample(channel, i, outputSample);
 		}
 	}
+	delayWriteIndex = dWriteIx;
 
 	timeInSamples += buffer.getNumSamples();
 }
@@ -220,6 +248,8 @@ void MyMidiSynthPlugInAudioProcessor::getStateInformation (MemoryBlock& destData
 	xml->setAttribute("cutOff", cutOff);
 	xml->setAttribute("resonance", resonance);
 	xml->setAttribute("isFilterUsingEnvelope", isFilterUsingEnvelope);
+	xml->setAttribute("delayDuration", delayDuration);
+	xml->setAttribute("delayFeedback", delayFeedback);
 	copyXmlToBinary(*xml, destData);
 }
 
@@ -245,6 +275,8 @@ void MyMidiSynthPlugInAudioProcessor::setStateInformation (const void* data, int
 	cutOff = xmlState->getDoubleAttribute("cutOff");
 	resonance = xmlState->getDoubleAttribute("resonance");
 	isFilterUsingEnvelope = xmlState->getBoolAttribute("isFilterUsingEnvelope");
+	delayDuration = xmlState->getDoubleAttribute("delayDuration");
+	delayFeedback = xmlState->getDoubleAttribute("delayFeedback");
 }
 
 //==============================================================================
