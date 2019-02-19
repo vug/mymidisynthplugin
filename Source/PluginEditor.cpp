@@ -144,6 +144,31 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 	};
 	filterUsingEnvelope.setToggleState(processor.isFilterUsingEnvelope, dontSendNotification);
 
+	addAndMakeVisible(delayDurationSlider);
+	delayDurationSlider.setSliderStyle(Slider::LinearHorizontal);
+	delayDurationSlider.setRange(0.01, 1.99, 0.01);
+	delayDurationSlider.setTextValueSuffix(" sec");
+	delayDurationSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	delayDurationSlider.setPopupDisplayEnabled(true, true, this, 2000);
+	delayDurationSlider.onValueChange = [this] {
+		processor.delayDuration = delayDurationSlider.getValue();
+	};
+	delayDurationSlider.setValue(processor.delayDuration);
+	addAndMakeVisible(delayDurationLabel);
+	delayDurationLabel.setText("delay", dontSendNotification);
+
+	addAndMakeVisible(delayFeedbackSlider);
+	delayFeedbackSlider.setSliderStyle(Slider::LinearHorizontal);
+	delayFeedbackSlider.setRange(0.0, 0.99, 0.01);
+	delayFeedbackSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	delayFeedbackSlider.setPopupDisplayEnabled(true, true, this, 2000);
+	delayFeedbackSlider.onValueChange = [this] {
+		processor.delayFeedback = delayFeedbackSlider.getValue();
+	};
+	delayFeedbackSlider.setValue(processor.delayFeedback);
+	addAndMakeVisible(delayFeedbackLabel);
+	delayFeedbackLabel.setText("feedback", dontSendNotification);
+
     setSize (400, 300);
 }
 
@@ -195,4 +220,10 @@ void MyMidiSynthPlugInAudioProcessorEditor::resized()
 	resonanceSlider.setBounds(130, 135, 100, 30);
 	resonanceLabel.setBounds(140, 125, 100, 15);
 	filterUsingEnvelope.setBounds(135, 155, 100, 30);
+
+	delayDurationSlider.setBounds(10, 200, 100, 30);
+	delayDurationLabel.setBounds(20, 190, 100, 15);
+	delayFeedbackSlider.setBounds(10, 235, 100, 30);
+	delayFeedbackLabel.setBounds(20, 225, 100, 15);
+
 }
