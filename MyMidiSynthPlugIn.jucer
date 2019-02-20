@@ -6,6 +6,14 @@
   <MAINGROUP id="PaAHqe" name="MyMidiSynthPlugIn">
     <FILE id="spjNxw" name="README.md" compile="0" resource="1" file="README.md"/>
     <GROUP id="{EE186D3A-444E-4367-96B2-80005E0A3254}" name="Source">
+      <FILE id="LqCSDL" name="MySynthesizerVoice.cpp" compile="1" resource="0"
+            file="Source/MySynthesizerVoice.cpp"/>
+      <FILE id="oGbpoT" name="MySynthesizerVoice.h" compile="0" resource="0"
+            file="Source/MySynthesizerVoice.h"/>
+      <FILE id="Qia3DT" name="MySynthesizerSound.cpp" compile="1" resource="0"
+            file="Source/MySynthesizerSound.cpp"/>
+      <FILE id="fLcxuB" name="MySynthesizerSound.h" compile="0" resource="0"
+            file="Source/MySynthesizerSound.h"/>
       <FILE id="RZtASI" name="Oscillator.h" compile="0" resource="0" file="Source/Oscillator.h"/>
       <FILE id="bAk6sg" name="Oscillator.cpp" compile="1" resource="0" file="Source/Oscillator.cpp"/>
       <FILE id="stMmyg" name="PluginProcessor.cpp" compile="1" resource="0"
