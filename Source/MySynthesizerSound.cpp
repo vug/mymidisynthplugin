@@ -1,11 +1,17 @@
-/*
-  ==============================================================================
-
-    MySynthesizerSound.cpp
-    Created: 19 Feb 2019 11:56:08pm
-    Author:  veliu
-
-  ==============================================================================
-*/
-
 #include "MySynthesizerSound.h"
+
+MySynthesizerSound::MySynthesizerSound() {
+
+}
+
+MySynthesizerSound::~MySynthesizerSound() {
+
+}
+
+bool MySynthesizerSound::appliesToNote(int) {
+	return true;
+}
+
+bool MySynthesizerSound::appliesToChannel(int) {
+	return true;
+}
