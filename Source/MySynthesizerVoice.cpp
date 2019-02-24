@@ -69,8 +69,26 @@ void MySynthesizerVoice::stopNote(float velocity, bool allowTailOff) {
 }
 
 void MySynthesizerVoice::renderNextBlock(AudioBuffer<double>& outputBuffer, int startSample, int numSamples) {
-
+	// not called by Synthesiser
 }
+
+void MySynthesizerVoice::renderNextBlock(AudioBuffer<float>& outputBuffer, int startSample, int numSamples) {
+	for (int i = 0; i < numSamples; i++) {
+		// Synthesize Oscillators
+		double x1 = osc1.oscillate();
+		double x2 = osc2.oscillate();
+		double m = oscVolumesMix;
+		double sourceSample = ((1.0 - m) * x1 + m * x2) * volume;
+
+		// Amplitude Envelope
+		double amp = arEnv.getNextSample();
+		double envelopedSample = amp * sourceSample;
+
+		for (int channel = 0; channel < outputBuffer.getNumChannels(); channel++) {
+			outputBuffer.addSample(channel, startSample + i, envelopedSample);
+		}
+	}
+};
 
 void MySynthesizerVoice::pitchWheelMoved(int newPitchWheelValue) {};
 void MySynthesizerVoice::controllerMoved(int controllerNumber, int newControllerValue) {};
