@@ -21,13 +21,12 @@ public:
 		int startSample,
 		int numSamples) override;
 
-	//void renderNextBlock(AudioBuffer<float>& outputBuffer,
-	//	int startSample,
-	//	int numSamples) override;
 	Oscillator osc1;
 	Oscillator osc2;
 	double oscVolumesMix;
 	ADSR arEnv;
+
+	void renderNextBlock(AudioBuffer<float>& outputBuffer, int startSample, int numSamples) override;
 	void pitchWheelMoved(int newPitchWheelValue) override;
 	void controllerMoved(int controllerNumber, int newControllerValue) override;
 
