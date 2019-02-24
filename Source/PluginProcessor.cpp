@@ -149,6 +149,19 @@ bool MyMidiSynthPlugInAudioProcessor::isBusesLayoutSupported (const BusesLayout&
 
 void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
+	buffer.clear();
+	for (int i = 0; i < mySynth.getNumVoices(); i++)
+	{
+		MySynthesizerVoice* myVoice;
+		if ((myVoice = dynamic_cast<MySynthesizerVoice*>(mySynth.getVoice(i))))
+		{
+			myVoice->setParameters(osc1.type, osc1.isBandLimited, osc2.type, osc2.isBandLimited, osc2.freqShiftCents, osc2.freqShiftSemitones, oscVolumesMix, arEnv.getParameters().attack, arEnv.getParameters().release);
+		}
+	}
+	mySynth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
+	buffer.applyGain(1.0 / mySynth.getNumVoices());
+
+	/*
 	// Process notes
 	int time;
 	MidiMessage msg;
@@ -161,8 +174,6 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		}
 	}
 
-	// TODO: frequency changes are snapped at block beginnings. They should happen the moment the note came in? 
-	// Well... Notes were already pressed, and given via midiMessages, actually...
 	if (!pressedNotes.empty())
 	{
 		noteFrequency = MidiMessage::getMidiNoteInHertz(getMostRecentNote());
@@ -174,24 +185,30 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 	{
 		arEnv.noteOff();
 	}
+	*/
 
 	// Sample based block processing
 	int dWriteIx = delayWriteIndex;
 	for (int i = 0; i < buffer.getNumSamples(); i++) {
+		/*
 		// Synthesize Oscillators
 		double x1 = osc1.oscillate();
 		double x2 = osc2.oscillate();
 		double m = oscVolumesMix;
 		double sourceSample = ((1.0 - m) * x1 + m * x2);
+		*/
 
 		// Amplitude Envelope
 		double amp = arEnv.getNextSample();
-		double envelopedSample = amp * sourceSample;
+		//double envelopedSample = amp * sourceSample;
+		const float *read = buffer.getReadPointer(0);
+		double envelopedSample = read[i];
 
 		// Low-Pass Filter (w/Envelope) Effect
 		double co; 
 		if (isFilterUsingEnvelope) {
-			co = amp * cutOff + (1.0 - amp) * 20.0;
+			co = cutOff;
+			//co = amp * cutOff + (1.0 - amp) * 20.0;
 		}
 		else {
 			co = cutOff;
@@ -199,6 +216,7 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		filter.setCoefficients(IIRCoefficients::makeLowPass(currentSampleRate, co, resonance));
 		double filteredSample = filter.processSingleSampleRaw((float)envelopedSample);
 
+		/*
 		// Delay Effect
 		int dIxDiff = (int)(delayDuration * currentSampleRate);  // readIndex is this much earlier than writeIndex
 		int dSize = delayBuffer.getNumSamples();
@@ -209,10 +227,12 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		if (++dWriteIx >= dSize) {  // dReadIx will be computed accordingly
 			dWriteIx = 0;
 		}
+		*/
 
 		// Master Volume and Output
 		double vol = masterVolume.getNextValue();
-		float outputSample = (float)(vol * delayedSample);
+		//float outputSample = (float)(vol * delayedSample);
+		float outputSample = (float)(vol * filteredSample);
 		for (auto channel = buffer.getNumChannels() - 1; channel >= 0; --channel)  // left, right channel agnostic
 		{
 			buffer.addSample(channel, i, outputSample);
