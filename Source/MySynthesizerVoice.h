@@ -21,6 +21,19 @@ public:
 		int startSample,
 		int numSamples) override;
 
+	// To be called by Processor in processBlock(), just before calling synth.processBlock().
+	void setParameters(
+		oscillatorTypes osc1Type,
+		bool osc1isBandLimited,
+		oscillatorTypes osc2Type,
+		bool osc2isBandLimited,
+		int osc2freqShiftCents,
+		int osc2freqShiftSemitones,
+		double oscVolumesMix,
+		double attack,
+		double release
+	);
+
 	Oscillator osc1;
 	Oscillator osc2;
 	double oscVolumesMix;
