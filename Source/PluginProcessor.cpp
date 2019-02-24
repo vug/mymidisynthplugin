@@ -147,8 +147,7 @@ bool MyMidiSynthPlugInAudioProcessor::isBusesLayoutSupported (const BusesLayout&
 }
 #endif
 
-void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
-{
+void MyMidiSynthPlugInAudioProcessor::processBlockPolyPhonic(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
 	buffer.clear();
 	for (int i = 0; i < mySynth.getNumVoices(); i++)
 	{
@@ -156,7 +155,7 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		if ((myVoice = dynamic_cast<MySynthesizerVoice*>(mySynth.getVoice(i))))
 		{
 			myVoice->setParameters(
-				osc1.type, osc1.isBandLimited, osc2.type, osc2.isBandLimited, osc2.freqShiftCents, osc2.freqShiftSemitones, oscVolumesMix, 
+				osc1.type, osc1.isBandLimited, osc2.type, osc2.isBandLimited, osc2.freqShiftCents, osc2.freqShiftSemitones, oscVolumesMix,
 				arEnv.getParameters().attack, arEnv.getParameters().release,
 				cutOff, resonance
 			);
@@ -164,8 +163,9 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 	}
 	mySynth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 	buffer.applyGain(1.0 / mySynth.getNumVoices());
+}
 
-	/*
+void MyMidiSynthPlugInAudioProcessor::processBlockMonoPhonic(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
 	// Process notes
 	int time;
 	MidiMessage msg;
@@ -189,12 +189,9 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 	{
 		arEnv.noteOff();
 	}
-	*/
 
 	// Sample based block processing
-	int dWriteIx = delayWriteIndex;
 	for (int i = 0; i < buffer.getNumSamples(); i++) {
-		/*
 		// Synthesize Oscillators
 		double x1 = osc1.oscillate();
 		double x2 = osc2.oscillate();
@@ -215,8 +212,24 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		}
 		filter.setCoefficients(IIRCoefficients::makeLowPass(currentSampleRate, co, resonance));
 		double filteredSample = filter.processSingleSampleRaw((float)envelopedSample);
-		*/
 
+		for (auto channel = buffer.getNumChannels() - 1; channel >= 0; --channel)  // left, right channel agnostic
+		{
+			buffer.addSample(channel, i, filteredSample);
+		}
+	}
+
+	timeInSamples += buffer.getNumSamples();
+}
+
+void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+{
+	//processBlockPolyPhonic(buffer, midiMessages);
+	processBlockMonoPhonic(buffer, midiMessages);
+
+	// Sample based block processing
+	int dWriteIx = delayWriteIndex;
+	for (int i = 0; i < buffer.getNumSamples(); i++) {
 		const float *read = buffer.getReadPointer(0);
 		double filteredSample = read[i];
 
@@ -240,8 +253,6 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		}
 	}
 	delayWriteIndex = dWriteIx;
-
-	timeInSamples += buffer.getNumSamples();
 }
 
 

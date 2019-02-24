@@ -73,6 +73,9 @@ private:
     //==============================================================================
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MyMidiSynthPlugInAudioProcessor)
 
+	void processBlockMonoPhonic(AudioBuffer<float>& buffer, MidiBuffer& midiMessages);
+	void processBlockPolyPhonic(AudioBuffer<float>& buffer, MidiBuffer& midiMessages);
+
 	double currentSampleRate = 0.0;
 	double noteFrequency;
 	LinearSmoothedValue<double> masterVolume;  // overall Synth volume
