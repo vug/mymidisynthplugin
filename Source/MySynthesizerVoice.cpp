@@ -27,3 +27,6 @@ void MySynthesizerVoice::stopNote(float velocity, bool allowTailOff) {
 void MySynthesizerVoice::renderNextBlock(AudioBuffer<double>& outputBuffer, int startSample, int numSamples) {
 
 }
+
+void MySynthesizerVoice::pitchWheelMoved(int newPitchWheelValue) {};
+void MySynthesizerVoice::controllerMoved(int controllerNumber, int newControllerValue) {};

@@ -23,13 +23,12 @@ public:
 	//void renderNextBlock(AudioBuffer<float>& outputBuffer,
 	//	int startSample,
 	//	int numSamples) override;
+	void pitchWheelMoved(int newPitchWheelValue) override;
+	void controllerMoved(int controllerNumber, int newControllerValue) override;
 
 	//bool isVoiceActive() const;
-	//void pitchWheelMoved(int newPitchWheelValue) override;
-	//void controllerMoved(int controllerNumber, int newControllerValue) override;
 	//void aftertouchChanged(int newAftertouchValue);
 	//void channelPressureChanged(int newChannelPressureValue) override;
-
 	//bool isPlayingChannel(int midiChannel) const;
 private:
 };
