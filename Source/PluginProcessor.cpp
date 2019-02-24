@@ -101,7 +101,7 @@ void MyMidiSynthPlugInAudioProcessor::prepareToPlay (double sampleRate, int)  //
 	// Setup Synthesiser Object
 	mySynth.setCurrentPlaybackSampleRate(currentSampleRate);
 	mySynth.clearVoices();
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 6; i++) {
 		mySynth.addVoice(new MySynthesizerVoice());
 	}
 	mySynth.clearSounds();
