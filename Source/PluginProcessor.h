@@ -75,6 +75,7 @@ private:
 
 	void processBlockMonoPhonic(AudioBuffer<float>& buffer, MidiBuffer& midiMessages);
 	void processBlockPolyPhonic(AudioBuffer<float>& buffer, MidiBuffer& midiMessages);
+	void processDelay(AudioBuffer<float>& buffer);
 
 	double currentSampleRate = 0.0;
 	double noteFrequency;

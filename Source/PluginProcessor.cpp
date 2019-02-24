@@ -226,7 +226,10 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 {
 	//processBlockPolyPhonic(buffer, midiMessages);
 	processBlockMonoPhonic(buffer, midiMessages);
+	processDelay(buffer);
+}
 
+void MyMidiSynthPlugInAudioProcessor::processDelay(AudioBuffer<float>& buffer) {
 	// Sample based block processing
 	int dWriteIx = delayWriteIndex;
 	for (int i = 0; i < buffer.getNumSamples(); i++) {
