@@ -1,5 +1,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "MySynthesizerVoice.h"
+#include "MySynthesizerSound.h"
 #include "Oscillator.h"
 
 //==============================================================================
@@ -92,8 +94,19 @@ void MyMidiSynthPlugInAudioProcessor::reset() {
 void MyMidiSynthPlugInAudioProcessor::prepareToPlay (double sampleRate, int)  // samplesPerBlock
 {
 	currentSampleRate = sampleRate;
+
 	masterVolume.setValue(1.0);
 	masterVolume.reset(sampleRate, 0.01);
+
+	// Setup Synthesiser Object
+	mySynth.setCurrentPlaybackSampleRate(currentSampleRate);
+	mySynth.clearVoices();
+	for (int i = 0; i < 3; i++) {
+		mySynth.addVoice(new MySynthesizerVoice());
+	}
+	mySynth.clearSounds();
+	mySynth.addSound(new MySynthesizerSound());
+
 	arEnv.setSampleRate(sampleRate);
 	arEnv.reset();
 

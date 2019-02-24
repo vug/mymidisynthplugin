@@ -58,6 +58,7 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+	Synthesiser mySynth;
 	Oscillator osc1;
 	Oscillator osc2;
 	double oscVolumesMix = 0.0;
