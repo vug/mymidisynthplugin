@@ -46,12 +46,26 @@ void MySynthesizerVoice::startNote(
 	int midiNoteNumber,
 	float velocity,
 	SynthesiserSound* sound,
-	int currentPitchWheelPosition) {
+	int currentPitchWheelPosition
+) {
+	double noteFrequency = MidiMessage::getMidiNoteInHertz(midiNoteNumber);
+	osc1.frequency = noteFrequency;
+	osc2.frequency = noteFrequency;
 
+	arEnv.setSampleRate(getSampleRate());
+	arEnv.reset();
+	arEnv.noteOn();
+	volume = velocity;
 }
 
 void MySynthesizerVoice::stopNote(float velocity, bool allowTailOff) {
-
+	if (allowTailOff) {
+		arEnv.noteOff();
+	}
+	else {
+		arEnv.reset();
+		clearCurrentNote();
+	}
 }
 
 void MySynthesizerVoice::renderNextBlock(AudioBuffer<double>& outputBuffer, int startSample, int numSamples) {

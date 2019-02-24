@@ -38,6 +38,7 @@ public:
 	Oscillator osc2;
 	double oscVolumesMix;
 	ADSR arEnv;
+	double volume = 0.0;
 
 	void renderNextBlock(AudioBuffer<float>& outputBuffer, int startSample, int numSamples) override;
 	void pitchWheelMoved(int newPitchWheelValue) override;
