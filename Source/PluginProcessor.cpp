@@ -220,7 +220,6 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		const float *read = buffer.getReadPointer(0);
 		double filteredSample = read[i];
 
-		/*
 		// Delay Effect
 		int dIxDiff = (int)(delayDuration * currentSampleRate);  // readIndex is this much earlier than writeIndex
 		int dSize = delayBuffer.getNumSamples();
@@ -231,12 +230,10 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		if (++dWriteIx >= dSize) {  // dReadIx will be computed accordingly
 			dWriteIx = 0;
 		}
-		*/
 
 		// Master Volume and Output
 		double vol = masterVolume.getNextValue();
-		//float outputSample = (float)(vol * delayedSample);
-		float outputSample = (float)(vol * filteredSample);
+		float outputSample = (float)(vol * delayedSample);
 		for (auto channel = buffer.getNumChannels() - 1; channel >= 0; --channel)  // left, right channel agnostic
 		{
 			buffer.addSample(channel, i, outputSample);
