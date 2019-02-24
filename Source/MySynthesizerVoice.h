@@ -33,12 +33,13 @@ public:
 		double attack,
 		double release,
 		double cutOff,
-		double resonance
+		double resonance,
+		bool isFilterUsingEnvelope
 	);
 
 	Oscillator osc1;
 	Oscillator osc2;
-	double oscVolumesMix;
+	double oscVolumesMix = 0.0;
 	ADSR arEnv;
 	double volume = 0.0;
 
@@ -52,6 +53,7 @@ public:
 	//bool isPlayingChannel(int midiChannel) const;
 private:
 	IIRFilter filter;
-	double cutOff;
-	double resonance;
+	double cutOff = 22000;
+	double resonance = 1.0;
+	bool isFilterUsingEnvelope = false;
 };

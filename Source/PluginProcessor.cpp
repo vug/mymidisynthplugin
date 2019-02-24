@@ -157,7 +157,7 @@ void MyMidiSynthPlugInAudioProcessor::processBlockPolyPhonic(AudioBuffer<float>&
 			myVoice->setParameters(
 				osc1.type, osc1.isBandLimited, osc2.type, osc2.isBandLimited, osc2.freqShiftCents, osc2.freqShiftSemitones, oscVolumesMix,
 				arEnv.getParameters().attack, arEnv.getParameters().release,
-				cutOff, resonance
+				cutOff, resonance, isFilterUsingEnvelope
 			);
 		}
 	}
