@@ -24,7 +24,9 @@ void MySynthesizerVoice::setParameters(
 	int osc2freqShiftSemitones,
 	double oscVolumesMix,
 	double attack,
-	double release
+	double release,
+	double cutOff,
+	double resonance
 ) {
 	osc1.type = osc1Type;
 	osc2.type = osc2Type;
@@ -40,6 +42,9 @@ void MySynthesizerVoice::setParameters(
 	p.sustain = 1.0f;
 	p.release = release;
 	arEnv.setParameters(p);
+
+	this->cutOff = cutOff;
+	this->resonance = resonance;
 }
 
 void MySynthesizerVoice::startNote(
@@ -84,8 +89,20 @@ void MySynthesizerVoice::renderNextBlock(AudioBuffer<float>& outputBuffer, int s
 		double amp = arEnv.getNextSample();
 		double envelopedSample = amp * sourceSample;
 
+		// Low-Pass Filter (w/Envelope) Effect
+		double co;
+		bool isFilterUsingEnvelope = true;
+		if (isFilterUsingEnvelope) {
+			co = amp * cutOff + (1.0 - amp) * 20.0;  // from 20 Hz to UI cutOff value
+		}
+		else {
+			co = cutOff;
+		}
+		filter.setCoefficients(IIRCoefficients::makeLowPass(getSampleRate(), co, resonance));
+		double filteredSample = filter.processSingleSampleRaw((float)envelopedSample);
+
 		for (int channel = 0; channel < outputBuffer.getNumChannels(); channel++) {
-			outputBuffer.addSample(channel, startSample + i, envelopedSample);
+			outputBuffer.addSample(channel, startSample + i, filteredSample);
 		}
 	}
 };

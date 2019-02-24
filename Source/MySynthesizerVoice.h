@@ -31,7 +31,9 @@ public:
 		int osc2freqShiftSemitones,
 		double oscVolumesMix,
 		double attack,
-		double release
+		double release,
+		double cutOff,
+		double resonance
 	);
 
 	Oscillator osc1;
@@ -49,4 +51,7 @@ public:
 	//void channelPressureChanged(int newChannelPressureValue) override;
 	//bool isPlayingChannel(int midiChannel) const;
 private:
+	IIRFilter filter;
+	double cutOff;
+	double resonance;
 };

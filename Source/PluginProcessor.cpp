@@ -155,7 +155,11 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		MySynthesizerVoice* myVoice;
 		if ((myVoice = dynamic_cast<MySynthesizerVoice*>(mySynth.getVoice(i))))
 		{
-			myVoice->setParameters(osc1.type, osc1.isBandLimited, osc2.type, osc2.isBandLimited, osc2.freqShiftCents, osc2.freqShiftSemitones, oscVolumesMix, arEnv.getParameters().attack, arEnv.getParameters().release);
+			myVoice->setParameters(
+				osc1.type, osc1.isBandLimited, osc2.type, osc2.isBandLimited, osc2.freqShiftCents, osc2.freqShiftSemitones, oscVolumesMix, 
+				arEnv.getParameters().attack, arEnv.getParameters().release,
+				cutOff, resonance
+			);
 		}
 	}
 	mySynth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
@@ -196,25 +200,25 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		double x2 = osc2.oscillate();
 		double m = oscVolumesMix;
 		double sourceSample = ((1.0 - m) * x1 + m * x2);
-		*/
 
 		// Amplitude Envelope
 		double amp = arEnv.getNextSample();
-		//double envelopedSample = amp * sourceSample;
-		const float *read = buffer.getReadPointer(0);
-		double envelopedSample = read[i];
+		double envelopedSample = amp * sourceSample;
 
 		// Low-Pass Filter (w/Envelope) Effect
-		double co; 
+		double co;
 		if (isFilterUsingEnvelope) {
-			co = cutOff;
-			//co = amp * cutOff + (1.0 - amp) * 20.0;
+			co = amp * cutOff + (1.0 - amp) * 20.0;
 		}
 		else {
 			co = cutOff;
 		}
 		filter.setCoefficients(IIRCoefficients::makeLowPass(currentSampleRate, co, resonance));
 		double filteredSample = filter.processSingleSampleRaw((float)envelopedSample);
+		*/
+
+		const float *read = buffer.getReadPointer(0);
+		double filteredSample = read[i];
 
 		/*
 		// Delay Effect
