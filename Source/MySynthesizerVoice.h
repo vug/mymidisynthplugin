@@ -1,6 +1,7 @@
 #pragma once
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "MySynthesizerSound.h"
+#include "Oscillator.h"
 
 class MySynthesizerVoice : public SynthesiserVoice {
 public:
@@ -23,6 +24,10 @@ public:
 	//void renderNextBlock(AudioBuffer<float>& outputBuffer,
 	//	int startSample,
 	//	int numSamples) override;
+	Oscillator osc1;
+	Oscillator osc2;
+	double oscVolumesMix;
+	ADSR arEnv;
 	void pitchWheelMoved(int newPitchWheelValue) override;
 	void controllerMoved(int controllerNumber, int newControllerValue) override;
 

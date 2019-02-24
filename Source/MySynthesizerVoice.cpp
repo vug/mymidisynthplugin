@@ -1,7 +1,10 @@
 #include "MySynthesizerVoice.h"
 
 MySynthesizerVoice::MySynthesizerVoice() {
-
+	double sr = getSampleRate();
+	osc1 = Oscillator(sr);
+	osc2 = Oscillator(sr);
+	arEnv.setSampleRate(sr);
 }
 
 MySynthesizerVoice::~MySynthesizerVoice() {
