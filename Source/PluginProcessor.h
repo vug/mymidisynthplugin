@@ -58,6 +58,7 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+	Synthesiser mySynth;
 	Oscillator osc1;
 	Oscillator osc2;
 	double oscVolumesMix = 0.0;
@@ -67,10 +68,15 @@ public:
 	bool isFilterUsingEnvelope = false;
 	double delayDuration = 0.3;  // sec
 	double delayFeedback = 0.0;
+	bool isMonophonic = false;
 
 private:
     //==============================================================================
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MyMidiSynthPlugInAudioProcessor)
+
+	void processBlockMonoPhonic(AudioBuffer<float>& buffer, MidiBuffer& midiMessages);
+	void processBlockPolyPhonic(AudioBuffer<float>& buffer, MidiBuffer& midiMessages);
+	void processDelay(AudioBuffer<float>& buffer);
 
 	double currentSampleRate = 0.0;
 	double noteFrequency;

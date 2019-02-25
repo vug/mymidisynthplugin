@@ -1,5 +1,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "MySynthesizerVoice.h"
+#include "MySynthesizerSound.h"
 #include "Oscillator.h"
 
 //==============================================================================
@@ -92,8 +94,19 @@ void MyMidiSynthPlugInAudioProcessor::reset() {
 void MyMidiSynthPlugInAudioProcessor::prepareToPlay (double sampleRate, int)  // samplesPerBlock
 {
 	currentSampleRate = sampleRate;
+
 	masterVolume.setValue(1.0);
 	masterVolume.reset(sampleRate, 0.01);
+
+	// Setup Synthesiser Object
+	mySynth.setCurrentPlaybackSampleRate(currentSampleRate);
+	mySynth.clearVoices();
+	for (int i = 0; i < 6; i++) {
+		mySynth.addVoice(new MySynthesizerVoice());
+	}
+	mySynth.clearSounds();
+	mySynth.addSound(new MySynthesizerSound());
+
 	arEnv.setSampleRate(sampleRate);
 	arEnv.reset();
 
@@ -134,8 +147,25 @@ bool MyMidiSynthPlugInAudioProcessor::isBusesLayoutSupported (const BusesLayout&
 }
 #endif
 
-void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
-{
+void MyMidiSynthPlugInAudioProcessor::processBlockPolyPhonic(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
+	buffer.clear();
+	for (int i = 0; i < mySynth.getNumVoices(); i++)
+	{
+		MySynthesizerVoice* myVoice;
+		if ((myVoice = dynamic_cast<MySynthesizerVoice*>(mySynth.getVoice(i))))
+		{
+			myVoice->setParameters(
+				osc1.type, osc1.isBandLimited, osc2.type, osc2.isBandLimited, osc2.freqShiftCents, osc2.freqShiftSemitones, oscVolumesMix,
+				arEnv.getParameters().attack, arEnv.getParameters().release,
+				cutOff, resonance, isFilterUsingEnvelope
+			);
+		}
+	}
+	mySynth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
+	buffer.applyGain(1.0 / mySynth.getNumVoices());
+}
+
+void MyMidiSynthPlugInAudioProcessor::processBlockMonoPhonic(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
 	// Process notes
 	int time;
 	MidiMessage msg;
@@ -148,8 +178,6 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		}
 	}
 
-	// TODO: frequency changes are snapped at block beginnings. They should happen the moment the note came in? 
-	// Well... Notes were already pressed, and given via midiMessages, actually...
 	if (!pressedNotes.empty())
 	{
 		noteFrequency = MidiMessage::getMidiNoteInHertz(getMostRecentNote());
@@ -163,7 +191,6 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 	}
 
 	// Sample based block processing
-	int dWriteIx = delayWriteIndex;
 	for (int i = 0; i < buffer.getNumSamples(); i++) {
 		// Synthesize Oscillators
 		double x1 = osc1.oscillate();
@@ -176,7 +203,7 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		double envelopedSample = amp * sourceSample;
 
 		// Low-Pass Filter (w/Envelope) Effect
-		double co; 
+		double co;
 		if (isFilterUsingEnvelope) {
 			co = amp * cutOff + (1.0 - amp) * 20.0;
 		}
@@ -185,6 +212,33 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		}
 		filter.setCoefficients(IIRCoefficients::makeLowPass(currentSampleRate, co, resonance));
 		double filteredSample = filter.processSingleSampleRaw((float)envelopedSample);
+
+		for (auto channel = buffer.getNumChannels() - 1; channel >= 0; --channel)  // left, right channel agnostic
+		{
+			buffer.addSample(channel, i, filteredSample);
+		}
+	}
+
+	timeInSamples += buffer.getNumSamples();
+}
+
+void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+{
+	if (isMonophonic) {
+		processBlockMonoPhonic(buffer, midiMessages);
+	}
+	else {
+		processBlockPolyPhonic(buffer, midiMessages);
+	}
+	processDelay(buffer);
+}
+
+void MyMidiSynthPlugInAudioProcessor::processDelay(AudioBuffer<float>& buffer) {
+	// Sample based block processing
+	int dWriteIx = delayWriteIndex;
+	for (int i = 0; i < buffer.getNumSamples(); i++) {
+		const float *read = buffer.getReadPointer(0);
+		double filteredSample = read[i];
 
 		// Delay Effect
 		int dIxDiff = (int)(delayDuration * currentSampleRate);  // readIndex is this much earlier than writeIndex
@@ -206,8 +260,6 @@ void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 		}
 	}
 	delayWriteIndex = dWriteIx;
-
-	timeInSamples += buffer.getNumSamples();
 }
 
 
