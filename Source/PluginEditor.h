@@ -55,6 +55,7 @@ private:
 	Label delayDurationLabel;
 	Slider delayFeedbackSlider;
 	Label delayFeedbackLabel;
+	ToggleButton isMonoPhonicToggle;
 
 	ADSR::Parameters getVolumeEnvelopeParameters();
 

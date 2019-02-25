@@ -169,6 +169,13 @@ MyMidiSynthPlugInAudioProcessorEditor::MyMidiSynthPlugInAudioProcessorEditor (My
 	addAndMakeVisible(delayFeedbackLabel);
 	delayFeedbackLabel.setText("feedback", dontSendNotification);
 
+	addAndMakeVisible(isMonoPhonicToggle);
+	isMonoPhonicToggle.setButtonText("MonoPhonic");
+	isMonoPhonicToggle.onClick = [this] {
+		processor.isMonophonic = isMonoPhonicToggle.getToggleState();
+	};
+	isMonoPhonicToggle.setToggleState(processor.isMonophonic, dontSendNotification);
+
     setSize (400, 300);
 }
 
@@ -225,5 +232,7 @@ void MyMidiSynthPlugInAudioProcessorEditor::resized()
 	delayDurationLabel.setBounds(20, 190, 100, 15);
 	delayFeedbackSlider.setBounds(10, 235, 100, 30);
 	delayFeedbackLabel.setBounds(20, 225, 100, 15);
+
+	isMonoPhonicToggle.setBounds(200, 200, 100, 30);
 
 }

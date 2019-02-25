@@ -68,6 +68,7 @@ public:
 	bool isFilterUsingEnvelope = false;
 	double delayDuration = 0.3;  // sec
 	double delayFeedback = 0.0;
+	bool isMonophonic = false;
 
 private:
     //==============================================================================

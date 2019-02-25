@@ -224,8 +224,12 @@ void MyMidiSynthPlugInAudioProcessor::processBlockMonoPhonic(AudioBuffer<float>&
 
 void MyMidiSynthPlugInAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
-	//processBlockPolyPhonic(buffer, midiMessages);
-	processBlockMonoPhonic(buffer, midiMessages);
+	if (isMonophonic) {
+		processBlockMonoPhonic(buffer, midiMessages);
+	}
+	else {
+		processBlockPolyPhonic(buffer, midiMessages);
+	}
 	processDelay(buffer);
 }
 
